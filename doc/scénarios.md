@@ -8,12 +8,14 @@ Les scénarios
         Si le joueur ne sait pas jouer
         2.b Le joueur consulte les règles du démineur.
 
-        2. Le joueur fait sa partie jusqu'à la fin.
-        3. Le joueur gagne en point d'expérience.
+        2. Le joueur choisit sa difficulté
+        3. Le joueur fait sa partie jusqu'à la fin.
+        4. Le joueur gagne en point d'expérience.
 
 
     II. Jouer aux mots fléchés
         1. Le joueur click sur le jeu mots fléchés.
+        2. Le joueur choisit sa difficulté
 
         Si le joueur ne sait pas jouer
         2.b. Le joueur consulte les règles des mots fléchés.
