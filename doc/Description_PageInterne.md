@@ -1,5 +1,5 @@
-####Descriptions des différentes pages de la maquette
-
+Description des différentes pages de la maquette
+================================================
 
 Page d’accueil :
 --
