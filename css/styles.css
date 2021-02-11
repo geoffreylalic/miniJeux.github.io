@@ -1,0 +1,15 @@
+h1 {
+    color : red;
+}
+
+span{
+    width : 20px;
+    height : 20px;
+    border: solid black;
+}
+
+div{
+    width : 20px;
+    height : 20px;
+    border: solid black;
+}
