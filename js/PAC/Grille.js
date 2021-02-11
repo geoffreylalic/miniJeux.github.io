@@ -1,15 +1,14 @@
-class Case {
-    constructor(ligne, colonne) {
-        this.mine = false;
-        this.ligne = ligne;
-        this.colonne = colonne;
-    }
-
-}
-
 class AbsGrille extends Abs {
     constructor() {
         super();
+    }
+
+    reçoitMessage(message, piecejointe) {
+        let result = "";
+        /*else {
+            result = super.reçoitMessage(message, piecejointe);
+        }
+        return result;*/
     }
 }
 
@@ -19,28 +18,56 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
 
+        this.tabCase;
+
+        this.grille = document.createElement("div");
+        this.grille.id = 'grille';
+        document.body.append(this.grille);
+
     }
 
     reçoitMessage(message, piecejointe) {
+        let result = "";
         if (message == MESSAGE.INIT) {
-            console.log("reçoitmesasge");
             this.construireGrille();
+            this.construireMine();
         }
+
+        //message non implémenté
+        else {
+            result = super.reçoitMessage(message, piecejointe);
+        }
+        return result;
     }
+
 
     construireGrille() {
+        this.tabCase = create2DArray(this.nbLignes);
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
-            let div = document.createElement("div");
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
-                let span = document.createElement("span");
-                div.appendChild(span);
+                let div = document.createElement("div");
+                this.grille.append(div);
+                this.tabCase[ligne][colonne] = new Case(ligne,colonne);
             }
+
         }
-        console.log("construireGrille");
 
     }
 
+    construireMine() {
+        let toutesLesDivs = document.querySelectorAll("#grille div");
 
+        toutesLesDivs.forEach((div, index) => {
+            //console.log(index)
+            let ligne = Math.floor(index / this.nbLignes);
+            let colonne = index % this.nbColonnes;
+
+
+            div.dataset.ligne = ligne;
+            div.dataset.colonne = colonne;
+            div.append(this.tabCase[ligne][colonne].image);
+        })
+    }
 }
 
 
@@ -49,9 +76,9 @@ class CtrlGrille extends Ctrl {
         super(abs, pres);
     }
 
-    init(){
+    init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
-        console.log("fct init")
+        console.log("fct init");
     }
 
 }
