@@ -1,7 +1,7 @@
 class MESSAGE {
     static INIT ="initialisation du jeu";
     static CLICK = "un élément a été clické";
-
+    static CASE_CLICK = "retourne une case clické";
 }
 
 class Abs {

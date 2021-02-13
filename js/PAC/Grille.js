@@ -5,9 +5,8 @@ class AbsGrille extends Abs {
 
     reçoitMessage(message, piecejointe) {
         let result = "";
-        if (message === MESSAGE.CLICK) {
-            console.log("dans abs reçoitmessage");
-            verificationMine(piecejointe);
+        if (message === MESSAGE.CASE_CLICK) {
+            this.verificationMine(piecejointe);
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -15,15 +14,16 @@ class AbsGrille extends Abs {
         return result;
     }
 
-    verificationMine(piecejointe){
-        let ligne = parseInt(piecejointe.dataset.ligne);
-        let colonne = parseInt(piecejointe.dataset.colonne);
-        if (this.tabCase[ligne][colonne].mine) {
-            console.log(piecejointe.mine === true);
-            let h1 = document.querySelector("h1");
-            h1.innerHTML += 'perdu';
+    verificationMine(piecejointe) {
+        let caseClick = piecejointe;
+        if (caseClick.mine === true) {
+            console.log("mine " + piecejointe);
+
+        } else if (caseClick.mine === false) {
+            console.log("pas mine " + piecejointe);
         }
     }
+
 }
 
 class PresGrille extends Pres {
@@ -34,13 +34,14 @@ class PresGrille extends Pres {
 
         this.tabCase;
 
+        this.nbMines = 10;
+
         this.grille = document.createElement("div");
         this.grille.id = 'grille';
         document.body.append(this.grille);
 
         //écouteur sur la grille
         //let grilleListenner = document.querySelector('#grille')
-
     }
 
     reçoitMessage(message, piecejointe) {
@@ -49,6 +50,9 @@ class PresGrille extends Pres {
             this.construireGrille();
             this.remplirTableau();
 
+        } else if (message == MESSAGE.CLICK) {
+            this.dessineMine(piecejointe);
+            this.clickSurMine(piecejointe);
         }
 
         //message non implémenté
@@ -58,6 +62,31 @@ class PresGrille extends Pres {
         return result;
     }
 
+    // on obtient la case clické
+    dessineMine(piecejointe) {
+        let divClick=piecejointe;
+        let ligne = divClick.dataset.ligne;
+        let colonne = divClick.dataset.colonne;
+        if(this.tabCase[ligne][colonne].mine){
+            divClick.append(this.tabCase[ligne][colonne].image);
+        }
+
+    }
+
+    //si le joueur click sur une mine toutes les mines se révèlent
+    clickSurMine(piecejointe){
+        let divClick=piecejointe;
+        let ligne = divClick.dataset.ligne;
+        let colonne = divClick.dataset.colonne;
+        let toutesLesDivs = document.querySelectorAll("#grille div");
+        if(this.tabCase[ligne][colonne].mine){
+            toutesLesDivs.forEach(div =>{
+                if(this.tabCase[div.dataset.ligne][[div.dataset.colonne]].mine){
+                    div.append((this.tabCase[div.dataset.ligne][div.dataset.colonne].image));
+                }
+            })
+        }
+    }
 
     construireGrille() {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
@@ -82,13 +111,13 @@ class PresGrille extends Pres {
             switch (mine) {
                 case 1:
                     this.tabCase[ligne][colonne] = new Case(ligne, colonne, true);
-                    div.append(this.tabCase[ligne][colonne].image);
+                    div.dataset.mine=true;
                     break;
                 case 2:
                     this.tabCase[ligne][colonne] = new Case(ligne, colonne, false);
+                    div.dataset.mine=false;
                     break;
             }
-
         })
     }
 
@@ -100,6 +129,18 @@ class CtrlGrille extends Ctrl {
         super(abs, pres);
     }
 
+    reçoitMessageDeLaPresentation(message, piecejointe) {
+        let result = "";
+        if (message == MESSAGE.CASE_CLICK) {
+            let caseClick = piecejointe;
+            this.abs.reçoitMessage(MESSAGE.CASE_CLICK, caseClick);
+        }
+        else {
+            result = super.reçoitMessageDeLaPresentation(message, piecejointe);
+        }
+        return result;
+    }
+
     reçoitMessageDeLAbstraction(message, piecejointe) {
         let result = "";
 
@@ -108,13 +149,11 @@ class CtrlGrille extends Ctrl {
     }
 
     init() {
-        console.log("fct init");
         this.pres.reçoitMessage(MESSAGE.INIT);
         //abonnement de la fonction à l'écouteur
-        this.pres.grille.addEventListener("click", (evt)=> {
+        this.pres.grille.addEventListener("click", (evt) => {
             let clickCible = evt.target;
-            console.log(clickCible);
-            this.abs.reçoitMessage(MESSAGE.CLICK, clickCible);
+            this.pres.reçoitMessage(MESSAGE.CLICK, clickCible);
         });
     }
 
