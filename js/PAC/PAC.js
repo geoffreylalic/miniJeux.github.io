@@ -2,6 +2,8 @@ class MESSAGE {
     static INIT ="initialisation du jeu";
     static CLICK = "un élément a été clické";
     static CASE_CLICK = "retourne une case clické";
+    static CASE_NON_MINE="clique sur une case non miné";
+    static DIFFUSION='on diffuse les cases non miné';
 }
 
 class Abs {

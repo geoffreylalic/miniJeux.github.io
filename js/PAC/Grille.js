@@ -5,8 +5,44 @@ class AbsGrille extends Abs {
 
     reçoitMessage(message, piecejointe) {
         let result = "";
-        result = super.reçoitMessage(message, piecejointe);
+        if (message === MESSAGE.CASE_CLICK) {
+            this.verificationMine(piecejointe);
+        }
+        else if (message === MESSAGE.CASE_NON_MINE) {
+            this.diffusion(piecejointe);
+        }
+        else {
+            result = super.reçoitMessage(message, piecejointe);
+        }
         return result;
+    }
+    diffusion(piecejointe) {
+        console.log('dans abs recois message');
+        console.log(piecejointe);
+        let divCaseNonMine = piecejointe;
+        divCaseNonMine.classList.add('.remplissage')
+        let ligne = divCaseNonMine.dataset.ligne;
+        let colonne = divCaseNonMine.dataset.colonne;
+        let pos = [ligne, colonne];
+        let nord = [ligne + 1, colonne];
+        let sud = [ligne - 1, colonne];
+        let est = [ligne, colonne + 1];
+        let ouest = [ligne, colonne - 1];
+        if (nord.dataset.mine == false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, nord);
+            //this.diffusion
+        }
+        if (sud.dataset.mine == false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, sud);
+        }
+        if (est.dataset.mine == false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, est);
+        }
+        if (ouest.dataset.mine == false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, ouest);
+        }
+
+
     }
 
 
@@ -41,6 +77,10 @@ class PresGrille extends Pres {
             this.dessineMine(piecejointe);
             this.clickSurCase(piecejointe);
         }
+        else if (message == MESSAGE.DIFFUSION) {
+            this.propagation(piecejointe);
+            this.caseNonMine(piecejointe);
+        }
 
         //message non implémenté
         else {
@@ -73,6 +113,24 @@ class PresGrille extends Pres {
                 }
             })
         }
+        else if (!this.tabCase[ligne][colonne].mine) {
+            //  this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CASE_NON_MINE, divClick);
+            console.log('case non miné');
+            this.caseNonMine(divClick);
+        }
+
+    }
+
+    propagation(piecejointe){
+        let coordonnees=piecejointe;
+        let ligne=coordonnees[0];
+        let colonne=coordonnees[1];
+        this.tabCase[ligne][colonne];
+
+    }
+
+    caseNonMine(div) {
+        div.classList.add('caseClick');
     }
 
     //la construction dépend du css
@@ -144,7 +202,20 @@ class CtrlGrille extends Ctrl {
 
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
-        result = super.reçoitMessageDeLaPresentation(message, piecejointe);
+        if (message == MESSAGE.CASE_CLICK) {
+            let caseClick = piecejointe;
+            this.abs.reçoitMessage(MESSAGE.CASE_CLICK, caseClick);
+        }
+        else if (message == MESSAGE.CASE_NON_MINE) {
+            this.abs.reçoitMessage(MESSAGE.CASE_NON_MINE, piecejointe);
+        }
+        else if (message == MESSAGE.DIFFUSION) {
+            this.pres.reçoitMessage(MESSAGE.DIFFUSION, nord);
+        }
+        else {
+            result = super.reçoitMessageDeLaPresentation(message, piecejointe);
+        }
+
         return result;
     }
 

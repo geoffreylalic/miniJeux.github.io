@@ -34,3 +34,6 @@ h1 {
 #grille div:hover {
     background-color: yellow;
 }
+.caseClick{
+    background-color: chartreuse;
+}
