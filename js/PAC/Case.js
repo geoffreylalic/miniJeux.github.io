@@ -4,7 +4,7 @@ class Case {
         this.ligne = ligne;
         this.colonne = colonne;
 
-        if(this.mine){ 
+        if (this.mine) {
             this.image = document.createElement("img");
             this.image.src = "assets/images/mine.jpg";
             this.image.width = 88;
@@ -15,11 +15,11 @@ class Case {
         }
 
     }
-    
 
 
-    toString(){
-        return 'mine = ' + this.mine;
+
+    toString() {
+        return 'ligne ' + this.ligne + ' colonne ' + this.colonne + ' mine = ' + this.mine +' \n';
     }
 
 }

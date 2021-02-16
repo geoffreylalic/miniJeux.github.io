@@ -8,44 +8,77 @@ class AbsGrille extends Abs {
         if (message === MESSAGE.CASE_CLICK) {
             this.verificationMine(piecejointe);
         }
-        else if (message === MESSAGE.CASE_NON_MINE) {
-            this.diffusion(piecejointe);
+        else if (message == MESSAGE.TABLEAU_CASE) {
+            //on réalise la diffusion à partir de la présentation
+            this.diffusion(piecejointe[0], piecejointe[1]);
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
     }
-    diffusion(piecejointe) {
-        console.log('dans abs recois message');
-        console.log(piecejointe);
-        let divCaseNonMine = piecejointe;
-        divCaseNonMine.classList.add('.remplissage')
-        let ligne = divCaseNonMine.dataset.ligne;
-        let colonne = divCaseNonMine.dataset.colonne;
-        let pos = [ligne, colonne];
-        let nord = [ligne + 1, colonne];
-        let sud = [ligne - 1, colonne];
-        let est = [ligne, colonne + 1];
-        let ouest = [ligne, colonne - 1];
-        if (nord.dataset.mine == false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, nord);
-            //this.diffusion
-        }
-        if (sud.dataset.mine == false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, sud);
-        }
-        if (est.dataset.mine == false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, est);
-        }
-        if (ouest.dataset.mine == false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, ouest);
-        }
 
 
+    getLigneColonne(piecejointe) {
+        let tabCoordonnes = [piecejointe.ligne, piecejointe.colonne];
+        return tabCoordonnes;
     }
 
+    // to do: mettre en parametre une case et pas un tableau de case
+    diffusion(tableauCase, caseCourante) {
+        let tabCasePres = tableauCase;
 
+        //on convertie en int les coordonnées
+        let ligneCaseCourante = caseCourante.ligne;
+        let colonneCaseCourante = caseCourante.colonne;
+
+        //on défini les position par rapport à la position courante de la case
+        //on regarde si on sort de la limite de la grille (bords)
+
+        //Case au sud
+        if (tabCasePres[ligneCaseCourante + 1] === undefined) {
+            void (0);
+        } else {
+            let caseSud = tabCasePres[ligneCaseCourante + 1][colonneCaseCourante];
+            if (caseSud.mine === false) {
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseSud);
+                this.diffusion(tabCasePres, caseSud);
+            }
+        }
+
+        //Case au nord
+        if (tabCasePres[ligneCaseCourante - 1] === undefined) {
+            void (0);
+        } else {
+            let caseNord = tabCasePres[ligneCaseCourante - 1][colonneCaseCourante];
+            if (caseNord.mine === false) {
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseNord);
+                this.diffusion(tabCasePres, caseNord);
+            }
+        }
+
+
+
+        //Case au ouest  
+        let caseOuest = tabCasePres[ligneCaseCourante][colonneCaseCourante - 1];
+        if (caseOuest === undefined) {
+            void (0);
+        } else if (caseOuest.mine === false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseOuest);
+            this.diffusion(tabCasePres, caseOuest);
+        }
+
+
+        //Case au est 
+        let caseEst = tabCasePres[ligneCaseCourante][colonneCaseCourante + 1];
+        if (caseEst === undefined) {
+            void (0);
+        } else if (caseEst.mine === false) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseEst);
+            this.diffusion(tabCasePres, caseEst);
+        }
+
+    }
 }
 
 class PresGrille extends Pres {
@@ -78,8 +111,8 @@ class PresGrille extends Pres {
             this.clickSurCase(piecejointe);
         }
         else if (message == MESSAGE.DIFFUSION) {
-            this.propagation(piecejointe);
-            this.caseNonMine(piecejointe);
+            //on recherche dans la grille la case qui doit etre dévoilé non miné
+            this.rechercheDansGrille(piecejointe);
         }
 
         //message non implémenté
@@ -87,6 +120,16 @@ class PresGrille extends Pres {
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
+    }
+
+    rechercheDansGrille(piecejointe) {
+        console.log('dans la grille');
+        let toutesLesDivs = document.querySelectorAll("#grille div");
+        toutesLesDivs.forEach(div => {
+            if (div.dataset.ligne === piecejointe.ligne && div.dataset.colonne === piecejointe.colonne) {
+                this.caseNonMine(div);
+            }
+        })
     }
 
     // on obtient la case clické
@@ -114,21 +157,18 @@ class PresGrille extends Pres {
             })
         }
         else if (!this.tabCase[ligne][colonne].mine) {
-            //  this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CASE_NON_MINE, divClick);
-            console.log('case non miné');
+            //on envoie la case avec son tableau à l'abstraction
+           
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
             this.caseNonMine(divClick);
         }
 
     }
 
-    propagation(piecejointe){
-        let coordonnees=piecejointe;
-        let ligne=coordonnees[0];
-        let colonne=coordonnees[1];
-        this.tabCase[ligne][colonne];
-
-    }
-
+    /**
+     * Pour changer la couleur d'une case qui n'est pas miné une clické
+     * @param {*} div 
+     */
     caseNonMine(div) {
         div.classList.add('caseClick');
     }
@@ -163,7 +203,7 @@ class PresGrille extends Pres {
                         this.tabCase[ligne][colonne] = new Case(ligne, colonne, true);
                     }
                     else if (typeof (this.tabCase[ligne][colonne]) === 'object') {
-                        console.log('else de remplir');
+
                         indexCase = Math.floor(Math.random() * toutesLesDivs.length)
                         index = indexCase;
                         if (this.tabCase[ligne][colonne] === undefined) {
@@ -206,12 +246,13 @@ class CtrlGrille extends Ctrl {
             let caseClick = piecejointe;
             this.abs.reçoitMessage(MESSAGE.CASE_CLICK, caseClick);
         }
-        else if (message == MESSAGE.CASE_NON_MINE) {
-            this.abs.reçoitMessage(MESSAGE.CASE_NON_MINE, piecejointe);
+        else if (message == MESSAGE.TABLEAU_CASE) {
+            this.abs.reçoitMessage(MESSAGE.TABLEAU_CASE, piecejointe);
         }
-        else if (message == MESSAGE.DIFFUSION) {
+
+        /*else if (message == MESSAGE.DIFFUSION) {
             this.pres.reçoitMessage(MESSAGE.DIFFUSION, nord);
-        }
+        }*/
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
@@ -222,7 +263,13 @@ class CtrlGrille extends Ctrl {
     reçoitMessageDeLAbstraction(message, piecejointe) {
         let result = "";
 
-        result = super.reçoitMessageDeLAbstraction(message, piecejointe);
+        if (message == MESSAGE.DIFFUSION) {
+            this.pres.reçoitMessage(MESSAGE.DIFFUSION, piecejointe);
+        } else {
+            result = super.reçoitMessageDeLAbstraction(message, piecejointe);
+        }
+
+
 
     }
 

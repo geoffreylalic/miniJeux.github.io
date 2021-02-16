@@ -2,8 +2,15 @@ class MESSAGE {
     static INIT ="initialisation du jeu";
     static CLICK = "un élément a été clické";
     static CASE_CLICK = "retourne une case clické";
-    static CASE_NON_MINE="clique sur une case non miné";
-    static DIFFUSION='on diffuse les cases non miné';
+    static CASE_NON_MINE_COORDONNEES="clique sur une case non miné";
+    static TABLEAU_CASE = "on envoie le tableau de case";
+
+    static DIFFUSION_NORD='on diffuse les cases non miné';
+    static DIFFUSION_SUD='on diffuse les cases non miné';
+    static DIFFUSION_EST = 'on diffuse les cases non miné';
+    static DIFFUSION_OUEST='on diffuse les cases non miné';
+
+    static TABLEAU_COORDONNEES = 'envoie du tableau et des coordonnées de la case clické';
 }
 
 class Abs {
