@@ -4,6 +4,8 @@ class Case {
         this.ligne = ligne;
         this.colonne = colonne;
         this.drapeau = false;
+        this.indice = 0;
+        this.decouvert = false;
 
         if (this.drapeau){
             this.imageDrapeau = document.createElement("img");

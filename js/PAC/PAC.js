@@ -6,7 +6,7 @@ class MESSAGE {
     static TABLEAU_CASE = "on envoie le tableau de case";
     static CLICK_DROIT = "évènement clickDroit";
     static DIFFUSION='on diffuse les cases non miné';
-
+    static UNE_CASE = 'une case non miné';
     static TABLEAU_COORDONNEES = 'envoie du tableau et des coordonnées de la case clické';
 }
 
