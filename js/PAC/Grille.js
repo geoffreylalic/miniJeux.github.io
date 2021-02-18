@@ -3,81 +3,70 @@ class AbsGrille extends Abs {
         super();
     }
 
+    /**
+     * Pour comparer les messages envoyés dans l'agent PAC
+     * @param {*} message classe MESSAGE de PAC.js
+     * @param {*} piecejointe objet envoyé à travers le PAC
+     */
     reçoitMessage(message, piecejointe) {
         let result = "";
-        if (message === MESSAGE.CASE_CLICK) {
-            this.verificationMine(piecejointe);
-        }
-        else if (message == MESSAGE.TABLEAU_CASE) {
-            //on réalise la diffusion à partir de la présentation
-            this.diffusion(piecejointe[0], piecejointe[1]);
-        }
-        else {
+        if (message == MESSAGE.TABLEAU_CASE) {
+            //on récupère le tableau et la une case dans la piecejointe
+            result = this.diffusion(piecejointe[0], piecejointe[1]);
+        }else {
+            //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
     }
 
-
-    getLigneColonne(piecejointe) {
-        let tabCoordonnes = [piecejointe.ligne, piecejointe.colonne];
-        return tabCoordonnes;
-    }
-
-    // to do: mettre en parametre une case et pas un tableau de case
+    /**
+     * Permet de faire la diffusion entre les case non minés dans le jeu et de les découvrir
+     * @param {*} tableauCase 
+     * @param {*} caseCourante 
+     */
     diffusion(tableauCase, caseCourante) {
+        let result = [];
         let tabCasePres = tableauCase;
 
         //on convertie en int les coordonnées
-        let ligneCaseCourante = caseCourante.ligne;
-        let colonneCaseCourante = caseCourante.colonne;
+        let ligneCaseCourante = parseInt(caseCourante.ligne);
+        let colonneCaseCourante = parseInt(caseCourante.colonne);
 
-        //on défini les position par rapport à la position courante de la case
-        //on regarde si on sort de la limite de la grille (bords)
+        //pour chaque postition on vérifie si elle est défini afin d'éviter les contrainte au niveau des bords de la grille
 
-        //Case au sud
-        if (tabCasePres[ligneCaseCourante + 1] === undefined) {
-            void (0);
-        } else {
-            let caseSud = tabCasePres[ligneCaseCourante + 1][colonneCaseCourante];
-            if (caseSud.mine === false) {
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseSud);
-                this.diffusion(tabCasePres, caseSud);
+        if(!caseCourante.decouvert && !caseCourante.mine){
+            result.push(caseCourante);
+            caseCourante.decouvert = true;
+            //Case au sud
+
+            if (tabCasePres[ligneCaseCourante + 1] !== undefined) {
+                let listSud = this.diffusion(tabCasePres,tabCasePres[ligneCaseCourante + 1][colonneCaseCourante]);
+                result = result.concat(listSud);
+            }
+    
+            //Case au nord
+            if (tabCasePres[ligneCaseCourante - 1] !== undefined) {
+                let listNord = this.diffusion(tabCasePres,tabCasePres[ligneCaseCourante - 1][colonneCaseCourante]);
+                result = result.concat(listNord);
+            } 
+                
+    
+            //Case au ouest  
+            if (tabCasePres[ligneCaseCourante][colonneCaseCourante - 1]!== undefined) {
+                let listOuest = this.diffusion(tabCasePres,tabCasePres[ligneCaseCourante][colonneCaseCourante - 1]);
+                result = result.concat(listOuest);
+            }
+    
+            //Case au est 
+            if (tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined) {
+                let listEst = this.diffusion(tabCasePres,tabCasePres[ligneCaseCourante][colonneCaseCourante + 1]);
+                result = result.concat(listEst); 
             }
         }
-
-        //Case au nord
-        if (tabCasePres[ligneCaseCourante - 1] === undefined) {
-            void (0);
-        } else {
-            let caseNord = tabCasePres[ligneCaseCourante - 1][colonneCaseCourante];
-            if (caseNord.mine === false) {
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseNord);
-                this.diffusion(tabCasePres, caseNord);
-            }
-        }
-
-
-
-        //Case au ouest  
-        let caseOuest = tabCasePres[ligneCaseCourante][colonneCaseCourante - 1];
-        if (caseOuest === undefined) {
-            void (0);
-        } else if (caseOuest.mine === false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseOuest);
-            this.diffusion(tabCasePres, caseOuest);
-        }
-
-
-        //Case au est 
-        let caseEst = tabCasePres[ligneCaseCourante][colonneCaseCourante + 1];
-        if (caseEst === undefined) {
-            void (0);
-        } else if (caseEst.mine === false) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.DIFFUSION, caseEst);
-            this.diffusion(tabCasePres, caseEst);
-        }
-
+        return result;
+        
+       
     }
 }
 
@@ -86,12 +75,9 @@ class PresGrille extends Pres {
         super();
         this.nbLignes = 9;
         this.nbColonnes = 9;
-
         this.tabCase;
-
         this.nbMines = 10;
-        this.tabMine = [];
-
+        //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");
         this.grille.id = 'grille';
         document.body.append(this.grille);
@@ -100,55 +86,67 @@ class PresGrille extends Pres {
         //let grilleListenner = document.querySelector('#grille')
     }
 
+    /**
+     * Pour comparer les messages envoyés dans l'agent PAC
+     * @param {*} message classe MESSAGE de PAC.js
+     * @param {*} piecejointe objet envoyé à travers le PAC
+     */
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message == MESSAGE.INIT) {
             this.construireGrille();
             this.remplirTableau();
-
         } else if (message == MESSAGE.CLICK) {
-            this.dessineMine(piecejointe);
             this.clickSurCase(piecejointe);
         }
         else if (message == MESSAGE.DIFFUSION) {
-            //on recherche dans la grille la case qui doit etre dévoilé non miné
             this.rechercheDansGrille(piecejointe);
+        } else if(message == MESSAGE.CLICK_DROIT){
+            this.ajoutDrapeau(piecejointe);
         }
-
-        //message non implémenté
         else {
+            //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
     }
+    /**
+     * Permet d'ajouter un drapeau grace au click droit
+     * @param {} piecejointe 
+     */
+    ajoutDrapeau(piecejointe){
+        let clickDroit = piecejointe;
+        let ligneCase = clickDroit.dataset.ligne;
+        let colonneCase = clickDroit.dataset.colonne;
+        this.tabCase[ligneCase][colonneCase].drapeau = true;
+        clickDroit.append(this.tabCase[ligneCase][colonneCase].imageDrapeau)
+    }
 
+    /**
+     * Permet de rechercher un indice dans la grille grace au coordonnés d'une case(ligne/colonne)
+     * @param {*} piecejointe une case
+     */
     rechercheDansGrille(piecejointe) {
-        console.log('dans la grille');
-        let toutesLesDivs = document.querySelectorAll("#grille div");
-        toutesLesDivs.forEach(div => {
-            if (div.dataset.ligne === piecejointe.ligne && div.dataset.colonne === piecejointe.colonne) {
-                this.caseNonMine(div);
-            }
-        })
+        let ligneCase = parseInt(piecejointe.ligne);
+        let colonneCase = parseInt(piecejointe.colonne);
+        let indiceDansGrille = (this.nbLignes * ligneCase) + colonneCase;
+        let grille = document.querySelectorAll("#grille div");
+        grille.item(indiceDansGrille).append(piecejointe.image);
+
+        //on renvoit la case qui a été découverte par progation (récursion)
+        //this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, piecejointe]);
     }
 
-    // on obtient la case clické
-    dessineMine(piecejointe) {
-        let divClick = piecejointe;
-        let ligne = divClick.dataset.ligne;
-        let colonne = divClick.dataset.colonne;
-        if (this.tabCase[ligne][colonne].mine === true) {
-            divClick.append(this.tabCase[ligne][colonne].image);
-        }
-
-    }
-
-    //si le joueur click sur une mine toutes les mines se révèlent
+    /**
+     * Permet de dessiner la contenu d'une case en fonction de son parametre de Case.mine
+     * @param {*} piecejointe 
+     */
     clickSurCase(piecejointe) {
         let divClick = piecejointe;
         let ligne = divClick.dataset.ligne;
         let colonne = divClick.dataset.colonne;
         let toutesLesDivs = document.querySelectorAll("#grille div");
+        let largeur = Math.floor(Math.sqrt(toutesLesDivs.length));
         if (this.tabCase[ligne][colonne].mine) {
             toutesLesDivs.forEach(div => {
                 if (this.tabCase[div.dataset.ligne][div.dataset.colonne].mine) {
@@ -158,9 +156,16 @@ class PresGrille extends Pres {
         }
         else if (!this.tabCase[ligne][colonne].mine) {
             //on envoie la case avec son tableau à l'abstraction
-           
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
-            this.caseNonMine(divClick);
+            let listAMontre = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
+            console.dir(listAMontre);
+            listAMontre.forEach(casee =>{
+                let ligne = parseInt(casee.ligne);
+                let colonne = parseInt(casee.colonne)
+                console.log(ligne*largeur+colonne);
+                this.caseNonMine(toutesLesDivs.item(ligne*largeur+colonne));
+            });
+       
+
         }
 
     }
@@ -170,10 +175,12 @@ class PresGrille extends Pres {
      * @param {*} div 
      */
     caseNonMine(div) {
-        div.classList.add('caseClick');
+        div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
     }
 
-    //la construction dépend du css
+    /**
+     * Permet de construire la grille
+     */
     construireGrille() {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
@@ -183,8 +190,12 @@ class PresGrille extends Pres {
                 div.dataset.colonne = colonne;
             }
         }
+        
     }
 
+    /**
+     * Permet de remplir la grille de case contenant des mines ou non
+     */
     remplirTableau() {
         this.tabCase = create2DArray(this.nbLignes);
         let toutesLesDivs = document.querySelectorAll("#grille div");
@@ -243,16 +254,11 @@ class CtrlGrille extends Ctrl {
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
         if (message == MESSAGE.CASE_CLICK) {
-            let caseClick = piecejointe;
-            this.abs.reçoitMessage(MESSAGE.CASE_CLICK, caseClick);
+            result = this.abs.reçoitMessage(MESSAGE.CASE_CLICK, piecejointe);
         }
         else if (message == MESSAGE.TABLEAU_CASE) {
-            this.abs.reçoitMessage(MESSAGE.TABLEAU_CASE, piecejointe);
+            result = this.abs.reçoitMessage(MESSAGE.TABLEAU_CASE, piecejointe);
         }
-
-        /*else if (message == MESSAGE.DIFFUSION) {
-            this.pres.reçoitMessage(MESSAGE.DIFFUSION, nord);
-        }*/
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
@@ -264,7 +270,7 @@ class CtrlGrille extends Ctrl {
         let result = "";
 
         if (message == MESSAGE.DIFFUSION) {
-            this.pres.reçoitMessage(MESSAGE.DIFFUSION, piecejointe);
+            this.pres.reçoitMessage(message, piecejointe);
         } else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
         }
@@ -280,6 +286,13 @@ class CtrlGrille extends Ctrl {
             let clickCible = evt.target;
             this.pres.reçoitMessage(MESSAGE.CLICK, clickCible);
         });
+
+        this.pres.grille.addEventListener("contextmenu", (evt)=>{
+            let clickDroit = evt.target;
+            console.log("j'ai fait un click droit");
+            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT,clickDroit);
+        })
+
     }
 
 
