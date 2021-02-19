@@ -193,13 +193,18 @@ class PresGrille extends Pres {
      * Permet d'ajouter un drapeau grace au click droit
      * @param {} piecejointe 
      */
-    ajoutDrapeau(piecejointe) {
+    ajoutDrapeau(piecejointe){
         let clickDroit = piecejointe;
+        if(! clickDroit.dataset.ligne){
+            clickDroit=clickDroit.parentNode;
+        }
+
         let ligneCase = clickDroit.dataset.ligne;
         let colonneCase = clickDroit.dataset.colonne;
-        this.tabCase[ligneCase][colonneCase].drapeau = true;
-        clickDroit.append(this.tabCase[ligneCase][colonneCase].imageDrapeau)
-    }
+        this.tabCase[ligneCase][colonneCase].showDrapeau();
+        clickDroit.append(this.tabCase[ligneCase][colonneCase].imageDrapeau);
+        
+        }
 
     /**
      * Permet de rechercher un indice dans la grille grace au coordonnés d'une case(ligne/colonne)
@@ -280,22 +285,22 @@ class PresGrille extends Pres {
         let ligne;
         let colonne;
 
-        // pour avoir nos this.nbMine aléatoire dans la grille 
         for (let caseCourante = 0; caseCourante < this.nbMines; caseCourante++) {
             indexCase = Math.floor(Math.random() * toutesLesDivs.length);
             toutesLesDivs.forEach((div, index) => {
-                ligne = parseInt(div.dataset.ligne);
-                colonne = parseInt(div.dataset.colonne);
+                ligne = div.dataset.ligne;
+                colonne = div.dataset.colonne;
                 if (index === indexCase) {
                     if (this.tabCase[ligne][colonne] === undefined) {
-                        this.tabCase[ligne][colonne] = new Case(ligne, colonne, true);
+                        this.tabCase[ligne][colonne] = new Case(ligne, colonne,true,div);
+
                     }
                     else if (typeof (this.tabCase[ligne][colonne]) === 'object') {
 
                         indexCase = Math.floor(Math.random() * toutesLesDivs.length)
                         index = indexCase;
                         if (this.tabCase[ligne][colonne] === undefined) {
-                            this.tabCase[ligne][colonne] = new Case(ligne, colonne, true);
+                            this.tabCase[ligne][colonne] = new Case(ligne, colonne, true,div);
                         }
                     }
                 }
@@ -362,10 +367,12 @@ class CtrlGrille extends Ctrl {
             this.pres.reçoitMessage(MESSAGE.CLICK, clickCible);
         });
 
-        this.pres.grille.addEventListener("contextmenu", (evt) => {
+        this.pres.grille.addEventListener("contextmenu", (evt)=>{
+            evt.preventDefault();
             let clickDroit = evt.target;
             console.log("j'ai fait un click droit");
-            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT, clickDroit);
+            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT,clickDroit);
+     
         })
 
     }

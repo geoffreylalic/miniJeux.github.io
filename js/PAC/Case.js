@@ -6,6 +6,7 @@ class Case {
         this.drapeau = false;
         this.indice = 0;
         this.decouvert = false;
+        this.div=div;
 
         if (this.drapeau){
             this.imageDrapeau = document.createElement("img");
@@ -36,6 +37,18 @@ class Case {
         }
 
     }
+    showDrapeau(){
+        if(this.image.src.endsWith("drapeau.jpg")){
+            this.image.parentNode.removeChild(this.image);    
+            }
+            else{
+               this.image=document.createElement('img');
+               this.image.src= "assets/images/drapeau.jpg";
+               this.image.width=80;
+               this.image.height=80;
+                this.div.appendChild(this.image);
+            }
+        }
 
 
 
