@@ -40,7 +40,7 @@ class Case {
 
 
     toString() {
-        return 'ligne ' + this.ligne + ' colonne ' + this.colonne + ' mine = ' + this.mine +' \n';
+        return 'ligne ' + this.ligne + ' colonne ' + this.colonne + ' mine = ' + this.mine + ' indice '+ this.indice+' \n';
     }
 
 }

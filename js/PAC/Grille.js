@@ -69,7 +69,7 @@ class AbsGrille extends Abs {
             }
         } else if (caseCourante.mine) {
             return result;
-        } else if(!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice>0){
+        } else if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice > 0) {
             let caseARetourner = [caseCourante];
             result = result.concat(caseARetourner);
             caseCourante.decouvert = true;
@@ -115,7 +115,7 @@ class PresGrille extends Pres {
             this.rechercheDansGrille(piecejointe);
         } else if (message == MESSAGE.CLICK_DROIT) {
             this.ajoutDrapeau(piecejointe);
-        } else if(message == MESSAGE.UNE_CASE){
+        } else if (message == MESSAGE.UNE_CASE) {
             console.log("dans le reçoitMessage pres message une case");
         }
         else {
@@ -138,45 +138,55 @@ class PresGrille extends Pres {
         }
 
         this.tabMine.forEach(caseMine => {
-            let ligne = parseInt(caseMine.ligne);
-            let colonne = parseInt(caseMine.colonne);
+            let ligne = caseMine.ligne;
+            let colonne = caseMine.colonne;
 
             console.log("ligne : " + ligne + 'colonne : ' + colonne);
             //Case sud
-            if (this.tabMine[ligne + 1] !== undefined) {
+            if (this.tabCase[ligne + 1] !== undefined) {
                 this.tabCase[ligne + 1][colonne].indice += 1;
             }
             //Case au nord
             if (this.tabCase[ligne - 1] !== undefined) {
-                this.tabCase[ligne - 1][colonne].indice += 1;
+                this.tabCase[ligne - 1][colonne].indice +=1;
             }
+
             //Case au ouest  
             if (this.tabCase[ligne][colonne - 1] !== undefined) {
-                this.tabCase[ligne][colonne - 1].indice += 1;
+                this.tabCase[ligne][colonne - 1].indice +=1;
             }
 
             //Case au est 
             if (this.tabCase[ligne][colonne + 1] !== undefined) {
-                this.tabCase[ligne][colonne + 1].indice += 1;
+                console.log("est " + this.tabCase[ligne][colonne + 1].indice);
             }
 
-            //Case nord est
-            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined) {
-                this.tabCase[ligne - 1][colonne + 1].indice += 1;
-            }
-            //Case nord ouest
-            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined) {
-                this.tabCase[ligne + 1][colonne - 1].indice += 1;
-            }
             //Case sud est
-            if (this.tabMine[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined) {
-                this.tabCase[ligne + 1][colonne + 1].indice += 1;
+            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && this.tabCase[ligne + 1][colonne + 1] !== undefined) {
+                this.tabCase[ligne + 1][colonne + 1].indice +=1;
             }
+
+
             //Case sud ouest
-            if (this.tabMine[ligne + 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined) {
-                this.tabCase[ligne + 1][colonne - 1].indice += 1;
+            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && this.tabCase[ligne + 1][colonne - 1] !== undefined) {
+                this.tabCase[ligne + 1][colonne - 1].indice +=1;
             }
+
+
+            //Case nord est
+            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && this.tabCase[ligne - 1][colonne + 1] !== undefined) {
+                this.tabCase[ligne - 1][colonne + 1].indice +=1;
+            }
+
+
+            //Case nord ouest
+            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && this.tabCase[ligne - 1][colonne - 1] !== undefined) {
+                this.tabCase[ligne - 1][colonne - 1].indice +=1;
+            }
+
         });
+
+
     }
 
     /**
@@ -333,7 +343,7 @@ class CtrlGrille extends Ctrl {
 
         if (message == MESSAGE.DIFFUSION) {
             this.pres.reçoitMessage(message, piecejointe);
-        }else if(message == MESSAGE.UNE_CASE) {
+        } else if (message == MESSAGE.UNE_CASE) {
             this.pres.reçoitMessage(message.piecejointe);
         }
         else {
