@@ -27,6 +27,7 @@ class AbsGrille extends Abs {
      */
     diffusion(tableauCase, caseCourante) {
         let result = [];
+        result.splice(0,result.length);
         let tabCasePres = tableauCase;
 
         //on convertie en int les coordonnées
@@ -35,19 +36,19 @@ class AbsGrille extends Abs {
 
         //pour chaque postition on vérifie si elle est défini afin d'éviter les contrainte au niveau des bords de la grille
 
-        if (!caseCourante.decouvert && !caseCourante.mine && !caseCourante.indice > 0) {
+        if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice === 0) {
             result.push(caseCourante);
             caseCourante.decouvert = true;
 
             //Case au sud
-            if (tabCasePres[ligneCaseCourante + 1] !== undefined) {
+            if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].indice === 0) {
                 let listSud = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante + 1][colonneCaseCourante]);
                 result = result.concat(listSud);
                 tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].decouvert = true;
             }
 
             //Case au nord
-            if (tabCasePres[ligneCaseCourante - 1] !== undefined) {
+            if (tabCasePres[ligneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].indice === 0) {
                 let listNord = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante - 1][colonneCaseCourante]);
                 result = result.concat(listNord);
                 tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].decouvert = true;
@@ -55,25 +56,25 @@ class AbsGrille extends Abs {
 
 
             //Case au ouest  
-            if (tabCasePres[ligneCaseCourante][colonneCaseCourante - 1] !== undefined) {
+            if (tabCasePres[ligneCaseCourante][colonneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].indice === 0) {
                 let listOuest = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante - 1]);
                 result = result.concat(listOuest);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].decouvert = true;
             }
 
             //Case au est 
-            if (tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined) {
+            if (tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].indice === 0) {
                 let listEst = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante + 1]);
                 result = result.concat(listEst);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].decouvert = true;
             }
-        } else if (caseCourante.mine) {
-            return result;
+
         } else if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice > 0) {
             let caseARetourner = [caseCourante];
             result = result.concat(caseARetourner);
             caseCourante.decouvert = true;
         }
+
         return result;
 
 
@@ -110,15 +111,13 @@ class PresGrille extends Pres {
             this.ajouterIndices();
         } else if (message == MESSAGE.CLICK) {
             this.clickSurCase(piecejointe);
-        }
-        else if (message == MESSAGE.DIFFUSION) {
+        } else if (message == MESSAGE.DIFFUSION) {
             this.rechercheDansGrille(piecejointe);
         } else if (message == MESSAGE.CLICK_DROIT) {
             this.ajoutDrapeau(piecejointe);
         } else if (message == MESSAGE.UNE_CASE) {
             console.log("dans le reçoitMessage pres message une case");
-        }
-        else {
+        }else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
@@ -138,50 +137,49 @@ class PresGrille extends Pres {
         }
 
         this.tabMine.forEach(caseMine => {
-            let ligne = caseMine.ligne;
-            let colonne = caseMine.colonne;
+            let ligne = parseInt(caseMine.ligne);
+            let colonne = parseInt(caseMine.colonne);
 
-            console.log("ligne : " + ligne + 'colonne : ' + colonne);
+            console.log("ligne : " + ligne + ' colonne : ' + colonne);
             //Case sud
-            if (this.tabCase[ligne + 1] !== undefined) {
+            if (this.tabCase[ligne + 1] !== undefined && !this.tabCase[ligne + 1][colonne].mine) {
                 this.tabCase[ligne + 1][colonne].indice += 1;
             }
+
+            
             //Case au nord
-            if (this.tabCase[ligne - 1] !== undefined) {
-                this.tabCase[ligne - 1][colonne].indice +=1;
+            if (this.tabCase[ligne - 1] !== undefined && !this.tabCase[ligne - 1][colonne].mine) {
+                this.tabCase[ligne - 1][colonne].indice += 1;
             }
 
             //Case au ouest  
-            if (this.tabCase[ligne][colonne - 1] !== undefined) {
-                this.tabCase[ligne][colonne - 1].indice +=1;
+            if (this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne][colonne - 1].mine) {
+                this.tabCase[ligne][colonne - 1].indice += 1;
             }
 
             //Case au est 
-            if (this.tabCase[ligne][colonne + 1] !== undefined) {
-                console.log("est " + this.tabCase[ligne][colonne + 1].indice);
+            if (this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne][colonne + 1].mine) {
+                this.tabCase[ligne][colonne + 1].indice +=1;
             }
 
             //Case sud est
-            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && this.tabCase[ligne + 1][colonne + 1] !== undefined) {
-                this.tabCase[ligne + 1][colonne + 1].indice +=1;
+            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined  && !this.tabCase[ligne + 1][colonne + 1].mine) {
+                this.tabCase[ligne + 1][colonne + 1].indice += 1;
             }
-
 
             //Case sud ouest
-            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && this.tabCase[ligne + 1][colonne - 1] !== undefined) {
-                this.tabCase[ligne + 1][colonne - 1].indice +=1;
+            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne + 1][colonne - 1].mine) {
+                this.tabCase[ligne + 1][colonne - 1].indice += 1;
             }
-
 
             //Case nord est
-            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && this.tabCase[ligne - 1][colonne + 1] !== undefined) {
-                this.tabCase[ligne - 1][colonne + 1].indice +=1;
+            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne - 1][colonne + 1].mine) {
+                this.tabCase[ligne - 1][colonne + 1].indice += 1;
             }
 
-
             //Case nord ouest
-            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && this.tabCase[ligne - 1][colonne - 1] !== undefined) {
-                this.tabCase[ligne - 1][colonne - 1].indice +=1;
+            if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne - 1][colonne - 1].mine) {
+                this.tabCase[ligne - 1][colonne - 1].indice += 1;
             }
 
         });
@@ -193,18 +191,18 @@ class PresGrille extends Pres {
      * Permet d'ajouter un drapeau grace au click droit
      * @param {} piecejointe 
      */
-    ajoutDrapeau(piecejointe){
+    ajoutDrapeau(piecejointe) {
         let clickDroit = piecejointe;
-        if(! clickDroit.dataset.ligne){
-            clickDroit=clickDroit.parentNode;
+        if (!clickDroit.dataset.ligne) {
+            clickDroit = clickDroit.parentNode;
         }
 
         let ligneCase = clickDroit.dataset.ligne;
         let colonneCase = clickDroit.dataset.colonne;
         this.tabCase[ligneCase][colonneCase].showDrapeau();
         clickDroit.append(this.tabCase[ligneCase][colonneCase].imageDrapeau);
-        
-        }
+
+    }
 
     /**
      * Permet de rechercher un indice dans la grille grace au coordonnés d'une case(ligne/colonne)
@@ -292,7 +290,7 @@ class PresGrille extends Pres {
                 colonne = div.dataset.colonne;
                 if (index === indexCase) {
                     if (this.tabCase[ligne][colonne] === undefined) {
-                        this.tabCase[ligne][colonne] = new Case(ligne, colonne,true,div);
+                        this.tabCase[ligne][colonne] = new Case(ligne, colonne, true, div);
 
                     }
                     else if (typeof (this.tabCase[ligne][colonne]) === 'object') {
@@ -300,7 +298,7 @@ class PresGrille extends Pres {
                         indexCase = Math.floor(Math.random() * toutesLesDivs.length)
                         index = indexCase;
                         if (this.tabCase[ligne][colonne] === undefined) {
-                            this.tabCase[ligne][colonne] = new Case(ligne, colonne, true,div);
+                            this.tabCase[ligne][colonne] = new Case(ligne, colonne, true, div);
                         }
                     }
                 }
@@ -367,12 +365,12 @@ class CtrlGrille extends Ctrl {
             this.pres.reçoitMessage(MESSAGE.CLICK, clickCible);
         });
 
-        this.pres.grille.addEventListener("contextmenu", (evt)=>{
+        this.pres.grille.addEventListener("contextmenu", (evt) => {
             evt.preventDefault();
             let clickDroit = evt.target;
             console.log("j'ai fait un click droit");
-            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT,clickDroit);
-     
+            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT, clickDroit);
+
         })
 
     }

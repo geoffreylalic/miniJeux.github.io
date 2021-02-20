@@ -1,5 +1,5 @@
 class Case {
-    constructor(ligne, colonne, mine) {
+    constructor(ligne, colonne, mine,div) {
         this.mine = mine;
         this.ligne = ligne;
         this.colonne = colonne;
@@ -15,9 +15,7 @@ class Case {
             this.imageDrapeau.height = 80;
             this.imageDrapeau.dataset.ligne = this.ligne;
             this.imageDrapeau.dataset.colonne = this.ligne;
-        }
-
-        if (this.mine) {
+        }if (this.mine) {
             this.image = document.createElement("img");
             this.image.src = "assets/images/mine.jpg";
             this.image.width = 88;
@@ -26,7 +24,7 @@ class Case {
             this.image.dataset.ligne = this.ligne;
             this.image.dataset.colonne = this.ligne;
     
-        }else{
+        }if(!this.mine){
             this.image = document.createElement("img");
             this.image.src = "assets/images/caseVide.png";
             this.image.width = 88;
