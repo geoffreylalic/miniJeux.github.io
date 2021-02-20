@@ -33,6 +33,7 @@ class Case {
             this.image.dataset.colonne = this.ligne;
     
         }
+        
 
     }
     showDrapeau(){

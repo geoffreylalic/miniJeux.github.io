@@ -27,7 +27,7 @@ class AbsGrille extends Abs {
      */
     diffusion(tableauCase, caseCourante) {
         let result = [];
-        result.splice(0,result.length);
+        result.splice(0, result.length);
         let tabCasePres = tableauCase;
 
         //on convertie en int les coordonnées
@@ -117,7 +117,7 @@ class PresGrille extends Pres {
             this.ajoutDrapeau(piecejointe);
         } else if (message == MESSAGE.UNE_CASE) {
             console.log("dans le reçoitMessage pres message une case");
-        }else {
+        } else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
@@ -146,7 +146,7 @@ class PresGrille extends Pres {
                 this.tabCase[ligne + 1][colonne].indice += 1;
             }
 
-            
+
             //Case au nord
             if (this.tabCase[ligne - 1] !== undefined && !this.tabCase[ligne - 1][colonne].mine) {
                 this.tabCase[ligne - 1][colonne].indice += 1;
@@ -159,11 +159,11 @@ class PresGrille extends Pres {
 
             //Case au est 
             if (this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne][colonne + 1].mine) {
-                this.tabCase[ligne][colonne + 1].indice +=1;
+                this.tabCase[ligne][colonne + 1].indice += 1;
             }
 
             //Case sud est
-            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined  && !this.tabCase[ligne + 1][colonne + 1].mine) {
+            if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne + 1][colonne + 1].mine) {
                 this.tabCase[ligne + 1][colonne + 1].indice += 1;
             }
 
@@ -256,7 +256,63 @@ class PresGrille extends Pres {
      * @param {*} div 
      */
     caseNonMine(div) {
-        div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
+        let ligne = parseInt(div.dataset.ligne);
+        let colonne = parseInt(div.dataset.colonne);
+        let image = document.createElement("img")
+        switch (this.tabCase[ligne][colonne].indice) {
+            case 0:
+                div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
+                break;
+            case 1:
+                image.src = "assets/images/1.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 2:
+                image.src = "assets/images/2.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 3:
+                image.src = "assets/images/3.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 4:
+                image.src = "assets/images/4.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 5:
+                image.src = "assets/images/5.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 6:
+                image.src = "assets/images/6.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 7:
+                image.src = "assets/images/7.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+            case 8:
+                image.src = "assets/images/8.png";
+                image.width = 88;
+                image.height = 80;
+                div.append(image);
+                break;
+        }
+
     }
 
     /**
