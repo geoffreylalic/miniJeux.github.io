@@ -87,7 +87,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 10;
+        this.nbMines = 1;
         this.tabMine = [];
         //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");
@@ -200,8 +200,6 @@ class PresGrille extends Pres {
         let ligneCase = clickDroit.dataset.ligne;
         let colonneCase = clickDroit.dataset.colonne;
         this.tabCase[ligneCase][colonneCase].showDrapeau();
-        clickDroit.append(this.tabCase[ligneCase][colonneCase].imageDrapeau);
-
     }
 
     /**
@@ -215,8 +213,7 @@ class PresGrille extends Pres {
         let grille = document.querySelectorAll("#grille div");
         grille.item(indiceDansGrille).append(piecejointe.image);
 
-        //on renvoit la case qui a été découverte par progation (récursion)
-        //this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, piecejointe]);
+    
     }
 
     /**
@@ -350,7 +347,6 @@ class PresGrille extends Pres {
 
                     }
                     else if (typeof (this.tabCase[ligne][colonne]) === 'object') {
-
                         indexCase = Math.floor(Math.random() * toutesLesDivs.length)
                         index = indexCase;
                         if (this.tabCase[ligne][colonne] === undefined) {
@@ -360,14 +356,12 @@ class PresGrille extends Pres {
                 }
             });
         }
-
-
         // on crée les case non miné
         toutesLesDivs.forEach(div => {
             ligne = parseInt(div.dataset.ligne);
             colonne = parseInt(div.dataset.colonne);
             if (this.tabCase[ligne][colonne] === undefined) {
-                this.tabCase[ligne][colonne] = new Case(ligne, colonne, false);
+                this.tabCase[ligne][colonne] = new Case(ligne, colonne, false, div);
             }
         })
 
@@ -408,9 +402,6 @@ class CtrlGrille extends Ctrl {
         else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
         }
-
-
-
     }
 
     init() {
