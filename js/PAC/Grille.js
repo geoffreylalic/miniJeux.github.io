@@ -10,14 +10,98 @@ class AbsGrille extends Abs {
      */
     reçoitMessage(message, piecejointe) {
         let result = "";
-        if (message == MESSAGE.TABLEAU_CASE) {
+        if (message === MESSAGE.TABLEAU_CASE) {
             //on récupère le tableau et la une case dans la piecejointe
             result = this.diffusion(piecejointe[0], piecejointe[1]);
-        } else {
+        } else if (message === MESSAGE.DIFFUSION_INDICES) {
+            result = this.diffusionIndices(piecejointe[0], piecejointe[1]);
+        }
+        else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
+    }
+
+    /**
+     * revoie une liste de case qui contient les case ayant des indices
+     * @param {*} listeCaseDecouverte 
+     * @param {*} tabCasePres 
+     */
+    diffusionIndices(listeCaseDecouverte, tabCasePres) {
+        let result = [];
+        listeCaseDecouverte.forEach(caseDecouverte => {
+            let ligneCaseCourante = parseInt(caseDecouverte.ligne);
+            let colonneCaseCourante = parseInt(caseDecouverte.colonne);
+            let caseCourante = tabCasePres[ligneCaseCourante][colonneCaseCourante];
+
+            if (caseCourante.decouvert && !caseCourante.mine && caseCourante.indice === 0) {
+
+                //Case au sud
+                if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].indice > 0 && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].decouvert && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].mine) {
+                    let listSud = tabCasePres[ligneCaseCourante + 1][colonneCaseCourante];
+                    result = result.concat(listSud);
+                    tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].decouvert = true;
+                }
+
+                //Case au nord
+                if (tabCasePres[ligneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].indice > 0 && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].decouvert && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].mine) {
+                    let listNord = tabCasePres[ligneCaseCourante - 1][colonneCaseCourante];
+                    result = result.concat(listNord);
+                    tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].decouvert = true;
+                }
+
+
+                //Case au ouest  
+                if (tabCasePres[ligneCaseCourante][colonneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].indice > 0 && !tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].decouvert && !tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].mine) {
+                    let listOuest = tabCasePres[ligneCaseCourante][colonneCaseCourante - 1];
+                    result = result.concat(listOuest);
+                    tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].decouvert = true;
+                }
+
+                //Case au est 
+                if (tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].indice > 0 && !tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].decouvert && !tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].mine) {
+                    let listEst = tabCasePres[ligneCaseCourante][colonneCaseCourante + 1];
+                    result = result.concat(listEst);
+                    tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].decouvert = true;
+                }
+
+
+                //Case sud est
+                if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante + 1].indice > 0 && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante + 1].decouvert && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante + 1].mine) {
+                    let listSudEst = tabCasePres[ligneCaseCourante + 1][colonneCaseCourante + 1];
+                    result = result.concat(listSudEst);
+                    tabCasePres[ligneCaseCourante + 1][colonneCaseCourante + 1].decouvert = true;
+                }
+
+                //Case sud ouest
+                if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante - 1].indice > 0 && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante - 1].decouvert && !tabCasePres[ligneCaseCourante + 1][colonneCaseCourante - 1].mine) {
+                    let listSudOuest = tabCasePres[ligneCaseCourante + 1][colonneCaseCourante - 1];
+                    result = result.concat(listSudOuest);
+                    tabCasePres[ligneCaseCourante + 1][colonneCaseCourante - 1].decouvert = true;
+
+                }
+
+                //Case nord est
+                if (tabCasePres[ligneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante - 1][colonneCaseCourante + 1].indice > 0 && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante + 1].decouvert && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante + 1].mine) {
+                    let listNordEst = tabCasePres[ligneCaseCourante - 1][colonneCaseCourante + 1];
+                    result = result.concat(listNordEst);
+                    tabCasePres[ligneCaseCourante - 1][colonneCaseCourante + 1].decouvert = true;
+                }
+
+                //Case nord ouest
+                if (tabCasePres[ligneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante][colonneCaseCourante - 1] !== undefined && tabCasePres[ligneCaseCourante - 1][colonneCaseCourante - 1].indice > 0 && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante - 1].decouvert && !tabCasePres[ligneCaseCourante - 1][colonneCaseCourante - 1].mine) {
+                    let listNordOuest = tabCasePres[ligneCaseCourante - 1][colonneCaseCourante - 1];
+                    result = result.concat(listNordOuest);
+                    tabCasePres[ligneCaseCourante - 1][colonneCaseCourante - 1].decouvert = true;
+                }
+
+            }
+
+
+        });
+        return result;
+
     }
 
     /**
@@ -27,14 +111,13 @@ class AbsGrille extends Abs {
      */
     diffusion(tableauCase, caseCourante) {
         let result = [];
-        result.splice(0, result.length);
+        //result.splice(0, result.length);
         let tabCasePres = tableauCase;
 
         //on convertie en int les coordonnées
         let ligneCaseCourante = parseInt(caseCourante.ligne);
         let colonneCaseCourante = parseInt(caseCourante.colonne);
 
-        //pour chaque postition on vérifie si elle est défini afin d'éviter les contrainte au niveau des bords de la grille
 
         if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice === 0) {
             result.push(caseCourante);
@@ -76,8 +159,6 @@ class AbsGrille extends Abs {
         }
 
         return result;
-
-
     }
 }
 
@@ -87,7 +168,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 1;
+        this.nbMines = 10;
         this.tabMine = [];
         //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");
@@ -116,7 +197,6 @@ class PresGrille extends Pres {
         } else if (message == MESSAGE.CLICK_DROIT) {
             this.ajoutDrapeau(piecejointe);
         } else if (message == MESSAGE.UNE_CASE) {
-            console.log("dans le reçoitMessage pres message une case");
         } else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
@@ -145,7 +225,6 @@ class PresGrille extends Pres {
             if (this.tabCase[ligne + 1] !== undefined && !this.tabCase[ligne + 1][colonne].mine) {
                 this.tabCase[ligne + 1][colonne].indice += 1;
             }
-
 
             //Case au nord
             if (this.tabCase[ligne - 1] !== undefined && !this.tabCase[ligne - 1][colonne].mine) {
@@ -196,7 +275,6 @@ class PresGrille extends Pres {
         if (!clickDroit.dataset.ligne) {
             clickDroit = clickDroit.parentNode;
         }
-
         let ligneCase = clickDroit.dataset.ligne;
         let colonneCase = clickDroit.dataset.colonne;
         this.tabCase[ligneCase][colonneCase].showDrapeau();
@@ -212,8 +290,6 @@ class PresGrille extends Pres {
         let indiceDansGrille = (this.nbLignes * ligneCase) + colonneCase;
         let grille = document.querySelectorAll("#grille div");
         grille.item(indiceDansGrille).append(piecejointe.image);
-
-    
     }
 
     /**
@@ -235,17 +311,20 @@ class PresGrille extends Pres {
         }
         else if (!this.tabCase[ligne][colonne].mine) {
             //on envoie la case avec son tableau à l'abstraction
-            console.log("indice sur case: " + this.tabCase[ligne][colonne].indice);
-            let listAMontre = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
-            listAMontre.forEach(casee => {
+            let listAMontrer = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
+            listAMontrer.forEach(casee => {
                 let ligne = parseInt(casee.ligne);
                 let colonne = parseInt(casee.colonne)
                 this.caseNonMine(toutesLesDivs.item(ligne * largeur + colonne));
             });
 
-
+            let indicesAMontrer = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.DIFFUSION_INDICES, [listAMontrer, this.tabCase]);
+            indicesAMontrer.forEach(caseIndice => {
+                let ligne = parseInt(caseIndice.ligne);
+                let colonne = parseInt(caseIndice.colonne)
+                this.caseNonMine(toutesLesDivs.item(ligne * largeur + colonne));
+            });
         }
-
     }
 
     /**
@@ -255,60 +334,63 @@ class PresGrille extends Pres {
     caseNonMine(div) {
         let ligne = parseInt(div.dataset.ligne);
         let colonne = parseInt(div.dataset.colonne);
-        let image = document.createElement("img")
-        switch (this.tabCase[ligne][colonne].indice) {
-            case 0:
-                div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
-                break;
-            case 1:
-                image.src = "assets/images/1.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 2:
-                image.src = "assets/images/2.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 3:
-                image.src = "assets/images/3.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 4:
-                image.src = "assets/images/4.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 5:
-                image.src = "assets/images/5.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 6:
-                image.src = "assets/images/6.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 7:
-                image.src = "assets/images/7.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
-            case 8:
-                image.src = "assets/images/8.png";
-                image.width = 88;
-                image.height = 80;
-                div.append(image);
-                break;
+        let image = document.createElement("img");
+        if (this.tabCase[ligne][colonne].decouvert) {
+            switch (this.tabCase[ligne][colonne].indice) {
+                case 0:
+                    div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
+                    break;
+                case 1:
+                    image.src = "assets/images/1.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 2:
+                    image.src = "assets/images/2.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 3:
+                    image.src = "assets/images/3.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 4:
+                    image.src = "assets/images/4.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 5:
+                    image.src = "assets/images/5.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 6:
+                    image.src = "assets/images/6.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 7:
+                    image.src = "assets/images/7.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+                case 8:
+                    image.src = "assets/images/8.png";
+                    image.width = 88;
+                    image.height = 80;
+                    div.append(image);
+                    break;
+            }
         }
+
 
     }
 
@@ -378,11 +460,13 @@ class CtrlGrille extends Ctrl {
 
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
-        if (message == MESSAGE.CASE_CLICK) {
+        if (message === MESSAGE.CASE_CLICK) {
             result = this.abs.reçoitMessage(MESSAGE.CASE_CLICK, piecejointe);
         }
-        else if (message == MESSAGE.TABLEAU_CASE) {
+        else if (message === MESSAGE.TABLEAU_CASE) {
             result = this.abs.reçoitMessage(MESSAGE.TABLEAU_CASE, piecejointe);
+        } else if (message === MESSAGE.DIFFUSION_INDICES) {
+            result = this.abs.reçoitMessage(message, piecejointe);
         }
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
