@@ -1,7 +1,4 @@
 const assetsToLoadURLs = {
-    mine :{ url: 'assets/images/mine.jpg'},
-    caseVide : { url: 'assets/images/caseVide.png'},
-    drapeau : { url: 'assets/images/drapeau.jpg'}
 }
 
 function loadAssets(callback) {

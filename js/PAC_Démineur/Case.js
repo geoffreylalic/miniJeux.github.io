@@ -10,7 +10,7 @@ class Case {
         
         if (this.mine) {
             this.image = document.createElement("img");
-            this.image.src = "assets/images/mine.jpg";
+            this.image.src = "assets/images/demineur/mine.jpg";
             this.image.width = 88;
             this.image.height = 80;
             this.image.dataset.mine = true;
@@ -19,7 +19,7 @@ class Case {
 
         } if (!this.mine) {
             this.image = document.createElement("img");
-            this.image.src = "assets/images/caseVide.png";
+            this.image.src = "assets/images/demineur/caseVide.png";
             this.image.width = 88;
             this.image.height = 80;
             this.image.dataset.ligne = this.ligne;
@@ -36,9 +36,8 @@ class Case {
             this.image.src = null;
         }
         else {
-            console.log("dans else if");
             this.image = document.createElement('img');
-            this.image.src = "assets/images/drapeau.jpg";
+            this.image.src = "assets/images/demineur/drapeau.jpg";
             this.image.width = 88;
             this.image.height = 80;
             this.div.appendChild(this.image);

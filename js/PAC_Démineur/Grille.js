@@ -168,7 +168,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 10;
+        this.nbMines = 30;
         this.tabMine = [];
         //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");
@@ -215,63 +215,49 @@ class PresGrille extends Pres {
                 }
             }
         }
-
         this.tabMine.forEach(caseMine => {
             let ligne = parseInt(caseMine.ligne);
             let colonne = parseInt(caseMine.colonne);
-
-            console.log("ligne : " + ligne + ' colonne : ' + colonne);
             //Case sud
             if (this.tabCase[ligne + 1] !== undefined && !this.tabCase[ligne + 1][colonne].mine) {
                 this.tabCase[ligne + 1][colonne].indice += 1;
             }
-
             //Case au nord
             if (this.tabCase[ligne - 1] !== undefined && !this.tabCase[ligne - 1][colonne].mine) {
                 this.tabCase[ligne - 1][colonne].indice += 1;
             }
-
             //Case au ouest  
             if (this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne][colonne - 1].mine) {
                 this.tabCase[ligne][colonne - 1].indice += 1;
             }
-
             //Case au est 
             if (this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne][colonne + 1].mine) {
                 this.tabCase[ligne][colonne + 1].indice += 1;
             }
-
             //Case sud est
             if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne + 1][colonne + 1].mine) {
                 this.tabCase[ligne + 1][colonne + 1].indice += 1;
             }
-
             //Case sud ouest
             if (this.tabCase[ligne + 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne + 1][colonne - 1].mine) {
                 this.tabCase[ligne + 1][colonne - 1].indice += 1;
             }
-
             //Case nord est
             if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne + 1] !== undefined && !this.tabCase[ligne - 1][colonne + 1].mine) {
                 this.tabCase[ligne - 1][colonne + 1].indice += 1;
             }
-
             //Case nord ouest
             if (this.tabCase[ligne - 1] !== undefined && this.tabCase[ligne][colonne - 1] !== undefined && !this.tabCase[ligne - 1][colonne - 1].mine) {
                 this.tabCase[ligne - 1][colonne - 1].indice += 1;
             }
-
         });
-
-
     }
 
     /**
      * Permet d'ajouter un drapeau grace au click droit
-     * @param {} piecejointe 
+     * @param {} clickDroit 
      */
-    ajoutDrapeau(piecejointe) {
-        let clickDroit = piecejointe;
+    ajoutDrapeau(clickDroit) {
         if (!clickDroit.dataset.ligne) {
             clickDroit = clickDroit.parentNode;
         }
@@ -296,8 +282,7 @@ class PresGrille extends Pres {
      * Permet de dessiner la contenu d'une case en fonction de son parametre de Case.mine
      * @param {*} piecejointe 
      */
-    clickSurCase(piecejointe) {
-        let divClick = piecejointe;
+    clickSurCase(divClick) {
         let ligne = divClick.dataset.ligne;
         let colonne = divClick.dataset.colonne;
         let toutesLesDivs = document.querySelectorAll("#grille div");
@@ -310,14 +295,14 @@ class PresGrille extends Pres {
             })
         }
         else if (!this.tabCase[ligne][colonne].mine) {
-            //on envoie la case avec son tableau à l'abstraction
+            //on effectue la diffusion des case ayant des indices 0 par rapport a la case clické
             let listAMontrer = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.TABLEAU_CASE, [this.tabCase, this.tabCase[ligne][colonne]]);
             listAMontrer.forEach(casee => {
                 let ligne = parseInt(casee.ligne);
                 let colonne = parseInt(casee.colonne)
                 this.caseNonMine(toutesLesDivs.item(ligne * largeur + colonne));
             });
-
+            //on effectue une deuxieme diffusion sur les case découverte ayant des indices = 0 dans les cases autour aient des indices >0 
             let indicesAMontrer = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.DIFFUSION_INDICES, [listAMontrer, this.tabCase]);
             indicesAMontrer.forEach(caseIndice => {
                 let ligne = parseInt(caseIndice.ligne);
@@ -341,49 +326,49 @@ class PresGrille extends Pres {
                     div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image)
                     break;
                 case 1:
-                    image.src = "assets/images/1.png";
+                    image.src = "assets/images/demineur/1.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 2:
-                    image.src = "assets/images/2.png";
+                    image.src = "assets/images/demineur/2.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 3:
-                    image.src = "assets/images/3.png";
+                    image.src = "assets/images/demineur/3.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 4:
-                    image.src = "assets/images/4.png";
+                    image.src = "assets/images/demineur/4.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 5:
-                    image.src = "assets/images/5.png";
+                    image.src = "assets/images/demineur/5.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 6:
-                    image.src = "assets/images/6.png";
+                    image.src = "assets/images/demineur/6.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 7:
-                    image.src = "assets/images/7.png";
+                    image.src = "assets/images/demineur/7.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 8:
-                    image.src = "assets/images/8.png";
+                    image.src = "assets/images/demineur/8.png";
                     image.width = 88;
                     image.height = 80;
                     div.append(image);
@@ -499,7 +484,6 @@ class CtrlGrille extends Ctrl {
         this.pres.grille.addEventListener("contextmenu", (evt) => {
             evt.preventDefault();
             let clickDroit = evt.target;
-            console.log("j'ai fait un click droit");
             this.pres.reçoitMessage(MESSAGE.CLICK_DROIT, clickDroit);
 
         })
