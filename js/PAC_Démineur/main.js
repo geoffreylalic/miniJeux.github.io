@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
-    loadAssets(startGame)
+    loadAssets(startGame);
 });
 
 function startGame(assets){

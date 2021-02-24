@@ -1,4 +1,6 @@
 class MESSAGE {
+    static INIT = "initialisation du jeu: mots fléchés";
+    static LISTE_MOTS = "liste des mots(soltions)";
 }
 
 class Abs {

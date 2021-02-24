@@ -1,14 +1,15 @@
 h1 {
-    color : red;
+    color: red;
 }
+
+
+/* début css démineur */
 
 #grille {
     width: 800px;
     height: 720px;
-    background-color: rgba(100, 100, 100, 0.5);
     border: 1px;
     border: 1px solid #999;
-
     display: grid;
     /* 1fr signifie "une fraction de la largeur de la grille", le repeat dit "9 cases" 
        égales à une fraction (1/9ème) Voir https://css-tricks.com/snippets/css/complete-guide-grid/ */
@@ -21,19 +22,54 @@ h1 {
     border: 2px solid rgba(0, 0, 0, 1);
     transition: 0.5s all;
     display: grid;
+    background-color: rgba(100, 100, 100, 0.5);
 }
 
-.number{
-    color:red;
-    font-size : 30px;
+.number {
+    color: red;
+    font-size: 30px;
     width: 100%;
-    height:100%;
+    height: 100%;
 }
-
 
 #grille div:hover {
     background-color: yellow;
 }
-.caseClick{
+
+.caseClick {
     background-color: chartreuse;
 }
+
+
+/* fin css démineur */
+
+
+/* début css motfléchés */
+
+#grilleMF {
+    width: 880px;
+    height: 720px;
+    border: 1px;
+    border: 1px solid #999;
+    display: grid;
+    /* 1fr signifie "une fraction de la largeur de la grille", le repeat dit "9 cases" 
+       égales à une fraction (1/9ème) Voir https://css-tricks.com/snippets/css/complete-guide-grid/ */
+    grid-template-columns: repeat(11, 1fr);
+    /* Pour contraindre la hauteur des lignes */
+    grid-auto-rows: 80px;
+}
+
+#grilleMF div {
+    border: 2px solid rgba(0, 0, 0, 1);
+    transition: 0.5s all;
+    display: grid;
+    font-size: 65px;
+    text-align: center;
+}
+
+#grilleMF div:hover {
+    background-color: pink;
+}
+
+
+/* fin css motfléchés */
