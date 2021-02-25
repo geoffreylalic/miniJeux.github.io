@@ -35,10 +35,10 @@ class AbsGrille extends Abs {
             "MATERIAU DE CONSTRUCTION POREUX",
         ];
         this.solutionLigne = [
-            "PALACE","CAME","SARRASIN","APITOIEMENT","INES","RE","BLESSER","SUC","LUI","RAMENE","PESER","IMPER","RENAIT","TUF"
+            "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
         ];
         this.solutionColonne = [
-            "GASPILLER","LAINEUSE","CARTESIEN","CROSS","RA","GEAI","ER","SERRAIT","ECIME","MM","ANE","SEPT","OM","NEUNEU","EST","CERF"
+            "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
         ];
     }
     reçoitMessage(message, piecejointe) {
@@ -88,6 +88,8 @@ class PresGrille extends Pres {
                 let div = document.createElement("div");
                 this.grille.append(div);
                 this.tabCase[ligne][colonne] = div;
+                this.tabCase[ligne][colonne].dataset.ligne = ligne;
+                this.tabCase[ligne][colonne].dataset.colonne = colonne;
             }
         }
     }
@@ -106,17 +108,17 @@ class PresGrille extends Pres {
                     let divHaut = document.createElement("div");
                     divHaut.classList.add("haut");
                     divHaut.innerText = listeIndices[indexIndice];
-                    indexIndice +=1;
+                    indexIndice += 1;
                     let divBas = document.createElement("div");
                     divBas.innerText = listeIndices[indexIndice];
-                    indexIndice +=1;
+                    indexIndice += 1;
                     divBas.classList.add("bas");
                     this.tabCase[ligne][colonne].append(divHaut);
                     this.tabCase[ligne][colonne].append(divBas);
                 } else if (lettre === '%') {
-                    this.tabCase[ligne][colonne].innerText=listeIndices[indexIndice];
-                    indexIndice +=1;
-                }else {
+                    this.tabCase[ligne][colonne].innerText = listeIndices[indexIndice];
+                    indexIndice += 1;
+                } else {
                     this.tabCase[ligne][colonne].classList.add("caseARemplir");
                     //this.tabCase[ligne][colonne].innerText = lettre;
                 }

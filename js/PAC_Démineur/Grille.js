@@ -190,13 +190,22 @@ class PresGrille extends Pres {
             this.construireGrille();
             this.remplirTableau();
             this.ajouterIndices();
-        } else if (message == MESSAGE.CLICK) {
-            this.clickSurCase(piecejointe);
-        } else if (message == MESSAGE.DIFFUSION) {
+            //abonnement de la fonction à l'écouteur
+            this.grille.addEventListener("click", (evt) => {
+                let clickCible = evt.target;
+                this.clickSurCase(clickCible);
+            });
+
+            this.grille.addEventListener("contextmenu", (evt) => {
+                evt.preventDefault();
+                let clickDroit = evt.target;
+                this.ajoutDrapeau(clickDroit);
+            })
+        }
+        else if (message == MESSAGE.DIFFUSION) {
             this.rechercheDansGrille(piecejointe);
-        } else if (message == MESSAGE.CLICK_DROIT) {
-            this.ajoutDrapeau(piecejointe);
-        } else if (message == MESSAGE.UNE_CASE) {
+        }
+        else if (message == MESSAGE.UNE_CASE) {
         } else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
@@ -475,18 +484,6 @@ class CtrlGrille extends Ctrl {
 
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
-        //abonnement de la fonction à l'écouteur
-        this.pres.grille.addEventListener("click", (evt) => {
-            let clickCible = evt.target;
-            this.pres.reçoitMessage(MESSAGE.CLICK, clickCible);
-        });
-
-        this.pres.grille.addEventListener("contextmenu", (evt) => {
-            evt.preventDefault();
-            let clickDroit = evt.target;
-            this.pres.reçoitMessage(MESSAGE.CLICK_DROIT, clickDroit);
-
-        })
 
     }
 
