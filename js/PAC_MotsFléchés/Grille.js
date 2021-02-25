@@ -66,6 +66,9 @@ class PresGrille extends Pres {
         this.grille = document.createElement("div");
         this.grille.id = 'grilleMF';
         document.body.append(this.grille);
+
+        this.tabCaseClick = [];
+
     }
 
     reçoitMessage(message, piecejointe) {
@@ -80,8 +83,8 @@ class PresGrille extends Pres {
         return result;
     }
 
+
     dessineGrille() {
-        console.log("dessineGrille");
         this.tabCase = create2DArray(this.nbLignes, this.nbColonnes);
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
@@ -95,12 +98,9 @@ class PresGrille extends Pres {
     }
 
     remplirIndices() {
-        console.log("remplir");
         let indexIndice = 0;
         let listeMotsAbs = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LISTE_MOTS);
         let listeIndices = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LISTE_INDICES);
-        console.log(listeIndices);
-        console.log(listeMotsAbs);
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
                 let lettre = listeMotsAbs[ligne][colonne];
@@ -120,13 +120,32 @@ class PresGrille extends Pres {
                     indexIndice += 1;
                 } else {
                     this.tabCase[ligne][colonne].classList.add("caseARemplir");
-                    //this.tabCase[ligne][colonne].innerText = lettre;
+                    this.tabCase[ligne][colonne].addEventListener("click", () => {
+                        if (this.tabCaseClick.length > 0) {
+                            this.tabCaseClick[0].classList.remove("caseSelectionne");
+                            this.tabCaseClick.pop();
+                            this.tabCaseClick.push(this.tabCase[ligne][colonne]);
+                            this.tabCaseClick[0].classList.add("caseSelectionne");
+                            //listener sur clavier
+                            window.addEventListener("keypress", (evt) => {
+                                let lettreTape = evt.key.toUpperCase();
+                                this.tabCaseClick[0].innerText = lettreTape;
+                            });
+                            console.log("dans remplir if");
+                        } else {
+                            this.tabCaseClick.push(this.tabCase[ligne][colonne]);
+                            this.tabCaseClick[0].classList.add("caseSelectionne");
+                            console.log("dans remplir else");
+                        }
+                    });
                 }
             }
         }
     }
-
 }
+
+
+
 
 class CtrlGrille extends Ctrl {
     constructor(abs, pres) {

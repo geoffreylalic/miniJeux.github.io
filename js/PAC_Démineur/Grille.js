@@ -168,7 +168,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 30;
+        this.nbMines = 10;
         this.tabMine = [];
         //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");

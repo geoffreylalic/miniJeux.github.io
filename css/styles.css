@@ -63,12 +63,11 @@ h1 {
     border: 2px solid rgba(0, 0, 0, 1);
     transition: 0.5s all;
     display: grid;
-    font-size: 10px;
     text-align: center;
 }
 
 #grilleMF div:hover {
-    background-color: pink;
+    /*background-color: pink;*/
 }
 
 .haut{
@@ -92,6 +91,14 @@ h1 {
 }
 
 .caseARemplir{
-   
+   font-color: red;
+}
+
+.caseARemplir{
+    font-size:60px;
+}
+
+.caseSelectionne{
+    background-color:blueviolet;
 }
 /* fin css motfléchés */
