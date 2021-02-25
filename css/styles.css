@@ -63,7 +63,7 @@ h1 {
     border: 2px solid rgba(0, 0, 0, 1);
     transition: 0.5s all;
     display: grid;
-    font-size: 65px;
+    font-size: 10px;
     text-align: center;
 }
 
@@ -71,5 +71,27 @@ h1 {
     background-color: pink;
 }
 
+.haut{
+    position: inherit;
+    top : 0;
+    border-bottom: 2px solid rgba(0, 0, 0, 1);
+}
 
+.bas{
+    position: inherit;
+    bottom : 0;
+    border: none;
+}
+
+#grilleMF div .haut:hover{
+    background-color: red;
+}
+
+#grilleMF div .bas:hover{
+    background-color: blue;
+}
+
+.caseARemplir{
+   
+}
 /* fin css motfléchés */

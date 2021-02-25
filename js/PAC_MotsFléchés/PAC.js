@@ -1,6 +1,7 @@
 class MESSAGE {
     static INIT = "initialisation du jeu: mots fléchés";
     static LISTE_MOTS = "liste des mots(soltions)";
+    static LISTE_INDICES = "liste des indices des mots à trouver";
 }
 
 class Abs {
