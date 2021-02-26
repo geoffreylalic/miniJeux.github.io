@@ -104,3 +104,94 @@ h1 {
     pointer-events: none;
 }
 /* fin css motfléchés */
+#banner1{
+    display: block;
+    background-color: rgb(75, 167, 75);
+    height: 50px;
+    width: 100%;
+}
+#banner1 p{
+     font-size: 30px;
+    position: relative;
+    padding-top: 10px;
+    text-align: center;
+    margin: 0;
+}
+#menu{
+    background-color: rgb(157, 226, 157);
+    position: relative;
+    height: 150px;
+    width: 100%;
+
+}
+#menu ul{
+    float: left;
+    left: 50%;
+    padding-top: 30px;
+    margin-left: -60px;
+}
+#menu ul li{
+    margin-left: 20px;
+    float: left;
+    list-style-type: none;
+}
+#menu ul li a{
+    padding-top: 10px;
+    text-align: center;
+    font-size: 30px;
+    display: inline-block;
+    background-color: cornsilk;
+    height: 50px;
+    width: 300px;
+    color: black;
+    text-decoration: none;
+    margin:0;
+}
+#menu ul li a:hover{
+    color:darkred;
+    background-color: lawngreen;
+}
+#banner2{
+    display: block;
+    background-color: rgb(75, 167, 75);
+    height: 50px;
+    width: 100%;
+}
+body{
+    margin: 0;
+}
+#footer{
+    display: block;
+    background-color: rgb(75, 167, 75);
+    height: 200px;
+    width: 100%;
+}
+#contenuprincipal{
+    background-color: rgb(253, 253, 253);
+    position: relative;
+    height: 500px;
+    width: 100%;
+
+}
+#contenuprincipal li{
+    padding-top: 100px;
+    margin-left: 300px;
+    float: left;
+    list-style-type: none;
+}
+#contenuprincipal li a{
+    padding-top: 100px;
+    text-align: center;
+    font-size: 30px;
+    display: inline-block;
+    background-color: cornsilk;
+    height: 200px;
+    width: 500px;
+    color: black;
+    text-decoration: none;
+    
+}
+#contenuprincipal li a:hover{
+    color:darkred;
+    background-color: lawngreen;
+}
