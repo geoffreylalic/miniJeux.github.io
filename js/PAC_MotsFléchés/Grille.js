@@ -1,6 +1,11 @@
 class AbsGrille extends Abs {
     constructor() {
         super();
+
+        this.nbLignes = 9;
+        this.nbColonnes = 11;
+
+        //les solutions
         this.listeDeMots = [
             "|G|C|G%E|O%",
             "PALACE|CAME",
@@ -12,6 +17,18 @@ class AbsGrille extends Abs {
             "PESER%IMPER",
             "%RENAIT%TUF"
         ];
+
+        //grille que remplie l'utilisateur
+        this.grilleUser = create2DArray(this.nbLignes, this.nbColonnes);
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
+                let lettre = this.listeDeMots[ligne][colonne];
+                if (lettre === "|" || lettre === "%") {
+                    this.grilleUser[ligne][colonne] = lettre;
+                }
+            }
+        }
+        console.log(this.grilleUser);
 
         this.listeIndices = [
             "C'EST GÂCHER ---▶", "BEL HÔTEL",
@@ -47,13 +64,27 @@ class AbsGrille extends Abs {
             result = this.listeDeMots;
         } else if (message === MESSAGE.LISTE_INDICES) {
             result = this.listeIndices;
+        } else if (message === MESSAGE.LETTRE) {
+            this.verification(piecejointe);
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
         }
-
         return result;
     }
+
+    verification(piecejointe) {
+        //on place la lettre ajouter dasn this.grilleUSer
+        let ligne = piecejointe[0];
+        let colonne = piecejointe[1];
+        let lettre = piecejointe[2];
+        console.log(typeof (ligne));
+        this.grilleUser[ligne][colonne] = lettre;
+        if (this.grilleUser[ligne][colonne] === this.listeDeMots[ligne][colonne]) {
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, colonne]);
+        }
+    }
+
 }
 
 class PresGrille extends Pres {
@@ -76,13 +107,21 @@ class PresGrille extends Pres {
         if (message === MESSAGE.INIT) {
             this.dessineGrille();
             this.remplirIndices();
-        } else {
+        } else if (MESSAGE.LETTRE_JUSTE, piecejointe) {
+            this.marqueLettre(piecejointe);
+        }
+        else {
             result = super.reçoitMessage(message, piecejointe);
         }
 
         return result;
     }
 
+    marqueLettre(piecejointe) {
+        let ligne = piecejointe[0];
+        let colonne = piecejointe[1];
+        this.tabCase[ligne][colonne].classList.add("marqueLettre");
+    }
 
     dessineGrille() {
         this.tabCase = create2DArray(this.nbLignes, this.nbColonnes);
@@ -104,6 +143,7 @@ class PresGrille extends Pres {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
                 let lettre = listeMotsAbs[ligne][colonne];
+                //afficher deux indices sur une case
                 if (lettre === '|') {
                     let divHaut = document.createElement("div");
                     divHaut.classList.add("haut");
@@ -115,8 +155,10 @@ class PresGrille extends Pres {
                     divBas.classList.add("bas");
                     this.tabCase[ligne][colonne].append(divHaut);
                     this.tabCase[ligne][colonne].append(divBas);
+                    //afficher un indice sur une case
                 } else if (lettre === '%') {
                     this.tabCase[ligne][colonne].innerText = listeIndices[indexIndice];
+                    this.tabCase[ligne][colonne].classList.add("divIndice");
                     indexIndice += 1;
                 } else {
                     this.tabCase[ligne][colonne].classList.add("caseARemplir");
@@ -130,12 +172,17 @@ class PresGrille extends Pres {
                             window.addEventListener("keypress", (evt) => {
                                 let lettreTape = evt.key.toUpperCase();
                                 this.tabCaseClick[0].innerText = lettreTape;
+                                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
                             });
                             console.log("dans remplir if");
                         } else {
                             this.tabCaseClick.push(this.tabCase[ligne][colonne]);
                             this.tabCaseClick[0].classList.add("caseSelectionne");
-                            console.log("dans remplir else");
+                            window.addEventListener("keypress", (evt) => {
+                                let lettreTape = evt.key.toUpperCase();
+                                this.tabCaseClick[0].innerText = lettreTape;
+                                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
+                            });
                         }
                     });
                 }
@@ -154,6 +201,11 @@ class CtrlGrille extends Ctrl {
 
     reçoitMessageDeLAbstraction(message, piecejointe) {
         let result = "";
+        if (message === MESSAGE.LETTRE_JUSTE) {
+            this.pres.reçoitMessage(message, piecejointe);
+        } else {
+            result = super.reçoitMessageDeLAbstraction(message, piecejointe);
+        }
         return result;
 
     }
@@ -163,6 +215,9 @@ class CtrlGrille extends Ctrl {
             result = this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.LISTE_INDICES) {
             result = this.abs.reçoitMessage(message);
+        } else if (message === MESSAGE.LETTRE) {
+            this.abs.reçoitMessage(message, piecejointe);
+            console.log("dans le controleurs");
         }
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
