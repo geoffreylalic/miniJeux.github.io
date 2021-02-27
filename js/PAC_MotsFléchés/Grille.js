@@ -25,10 +25,11 @@ class AbsGrille extends Abs {
                 let lettre = this.listeDeMots[ligne][colonne];
                 if (lettre === "|" || lettre === "%") {
                     this.grilleUser[ligne][colonne] = lettre;
+                } else {
+                    this.grilleUser[ligne][colonne] = ".";
                 }
             }
         }
-        console.log(this.grilleUser);
 
         this.listeIndices = [
             "C'EST GÂCHER ---▶", "BEL HÔTEL",
@@ -65,7 +66,9 @@ class AbsGrille extends Abs {
         } else if (message === MESSAGE.LISTE_INDICES) {
             result = this.listeIndices;
         } else if (message === MESSAGE.LETTRE) {
-            this.verification(piecejointe);
+            this.ajoutLettre(piecejointe);
+            this.verificationLigne();
+            this.verificationColonne();
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -73,16 +76,61 @@ class AbsGrille extends Abs {
         return result;
     }
 
-    verification(piecejointe) {
+    ajoutLettre(piecejointe) {
         //on place la lettre ajouter dasn this.grilleUSer
         let ligne = piecejointe[0];
         let colonne = piecejointe[1];
         let lettre = piecejointe[2];
-        console.log(typeof (ligne));
         this.grilleUser[ligne][colonne] = lettre;
-        if (this.grilleUser[ligne][colonne] === this.listeDeMots[ligne][colonne]) {
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, colonne]);
+    }
+
+    verificationLigne() {
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let indice = 0; indice < this.solutionLigne.length; indice++) {
+                let mot = this.grilleUser[ligne].join();
+                mot = mot.replaceAll(",", "");
+                if (mot.includes(this.solutionLigne[indice])) {
+                    //indice de la premiere lettre
+                    let posPremier = mot.indexOf(this.solutionLigne[indice]);
+                    let posDernier = posPremier + this.solutionLigne[indice].length;
+                    //envoyé a la présentation les lettre marqué;
+                    for (let position = posPremier; position < posDernier; position++) {
+                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
+                    }
+
+                }
+            }
         }
+    }
+
+    verificationColonne() {
+        //on tourne le tableau (colonnes deviennent des ligne et vice-versa)
+        let grilleInverse = create2DArray(11, 9);
+        for (let ligne = 0; ligne < this.nbColonnes; ligne++) {
+            for (let colonne = 0; colonne < this.nbLignes; colonne++) {
+                grilleInverse[ligne][colonne] = this.grilleUser[colonne][ligne];
+            }
+        }
+
+        for (let ligne = 0; ligne < this.nbColonnes; ligne++) {
+            for (let indice = 0; indice < this.solutionColonne.length; indice++) {
+                let mot = grilleInverse[ligne].join();
+                mot = mot.replaceAll(",", "");
+                console.log(mot);
+                if (mot.includes(this.solutionColonne[indice])) {
+                    //indice de la premiere lettre
+                    let posPremier = mot.indexOf(this.solutionColonne[indice]);
+                    let posDernier = posPremier + this.solutionColonne[indice].length;
+                    //envoyé a la présentation les lettre marqué;
+                    for (let position = posPremier; position < posDernier; position++) {
+                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
+                    }
+
+                }
+            }
+        }
+        
+
     }
 
 }
@@ -168,27 +216,24 @@ class PresGrille extends Pres {
                             this.tabCaseClick.pop();
                             this.tabCaseClick.push(this.tabCase[ligne][colonne]);
                             this.tabCaseClick[0].classList.add("caseSelectionne");
-                            //listener sur clavier
-                            window.addEventListener("keypress", (evt) => {
-                                let lettreTape = evt.key.toUpperCase();
-                                this.tabCaseClick[0].innerText = lettreTape;
-                                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
-                            });
-                            console.log("dans remplir if");
                         } else {
                             this.tabCaseClick.push(this.tabCase[ligne][colonne]);
                             this.tabCaseClick[0].classList.add("caseSelectionne");
-                            window.addEventListener("keypress", (evt) => {
-                                let lettreTape = evt.key.toUpperCase();
-                                this.tabCaseClick[0].innerText = lettreTape;
-                                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
-                            });
                         }
                     });
                 }
             }
         }
+        //listener sur clavier
+        window.addEventListener("keypress", (evt) => {
+            let lettreTape = evt.key.toUpperCase();
+            this.tabCaseClick[0].innerText = lettreTape;
+            let ligne = parseInt(this.tabCaseClick[0].dataset.ligne);
+            let colonne = parseInt(this.tabCaseClick[0].dataset.colonne);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
+        });
     }
+
 }
 
 
@@ -217,7 +262,6 @@ class CtrlGrille extends Ctrl {
             result = this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.LETTRE) {
             this.abs.reçoitMessage(message, piecejointe);
-            console.log("dans le controleurs");
         }
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
