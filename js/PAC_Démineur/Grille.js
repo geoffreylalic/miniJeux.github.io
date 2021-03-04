@@ -168,8 +168,9 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 10;
+        this.nbMines = 1;
         this.tabMine = [];
+        this.nbCaseDecouvertes = 0;
         //pour dessiner la grille grâce au css
         this.grille = document.createElement("div");
         this.grille.id = 'grille';
@@ -194,17 +195,15 @@ class PresGrille extends Pres {
             this.grille.addEventListener("click", (evt) => {
                 let clickCible = evt.target;
                 this.clickSurCase(clickCible);
+                this.finDePartie();
             });
-
             this.grille.addEventListener("contextmenu", (evt) => {
                 evt.preventDefault();
                 let clickDroit = evt.target;
                 this.ajoutDrapeau(clickDroit);
-            })
+            });
         }
-        else if (message == MESSAGE.DIFFUSION) {
-            this.rechercheDansGrille(piecejointe);
-        }
+
         else if (message == MESSAGE.UNE_CASE) {
         } else {
             //message d'erreur
@@ -213,17 +212,32 @@ class PresGrille extends Pres {
         return result;
     }
 
-    ajoutDrapeau(clickDroit) {
-        if (clickDroit.src.endsWith("drapeau.jpg")) {
-            clickDroit.parentNode.removeChild(this.image);
-            clickDroit.src = null;
+    finDePartie(){
+        this.nbCaseDecouvertes = 0;
+        for(let ligne = 0; ligne<this.nbLignes;ligne ++){
+            for (let colonne = 0; colonne<this.nbColonnes;colonne++){
+                if(this.tabCase[ligne][colonne].decouvert){
+                    this.nbCaseDecouvertes++;
+                }
+            }
         }
-        else {
-            clickDroit = document.createElement('img');
-            clickDroit.src = "assets/images/demineur/drapeau.jpg";
-            clickDroit.width = 88;
-            clickDroit.height = 80;
-            clickDroit.appendChild(clickDroit);
+        if(this.nbCaseDecouvertes === (this.nbLignes*this.nbColonnes - this.nbMines)){
+            alert("Gagné !!");
+        }
+    }
+
+    ajoutDrapeau(clickDroit) {
+        if (clickDroit.tagName === 'DIV') {
+            let img = document.createElement("img");
+            img.src = "assets/images/demineur/drapeau.jpg";
+            img.width = 88;
+            img.height = 80;
+            clickDroit.appendChild(img);
+        } else if (clickDroit.tagName === 'IMG') {
+            if (clickDroit.src.endsWith("drapeau.jpg")) {
+                clickDroit.remove();
+                clickDroit.src = null;
+            }
         }
     }
     /**
@@ -277,18 +291,6 @@ class PresGrille extends Pres {
 
 
     /**
-     * Permet de rechercher un indice dans la grille grace au coordonnés d'une case(ligne/colonne)
-     * @param {*} piecejointe une case
-     */
-    rechercheDansGrille(piecejointe) {
-        let ligneCase = parseInt(piecejointe.ligne);
-        let colonneCase = parseInt(piecejointe.colonne);
-        let indiceDansGrille = (this.nbLignes * ligneCase) + colonneCase;
-        let grille = document.querySelectorAll("#grille div");
-        grille.item(indiceDansGrille).append(piecejointe.image);
-    }
-
-    /**
      * Permet de dessiner la contenu d'une case en fonction de son parametre de Case.mine
      * @param {*} piecejointe 
      */
@@ -302,7 +304,8 @@ class PresGrille extends Pres {
                 if (this.tabCase[div.dataset.ligne][div.dataset.colonne].mine) {
                     div.append((this.tabCase[div.dataset.ligne][div.dataset.colonne].image));
                 }
-            })
+            });
+            alert('Perdu!');
         }
         else if (!this.tabCase[ligne][colonne].mine) {
             //on effectue la diffusion des case ayant des indices 0 par rapport a la case clické
@@ -431,7 +434,7 @@ class PresGrille extends Pres {
             ligne = parseInt(div.dataset.ligne);
             colonne = parseInt(div.dataset.colonne);
             if (this.tabCase[ligne][colonne] === undefined) {
-                this.tabCase[ligne][colonne] = new Case(ligne, colonne, false, div);
+                this.tabCase[ligne][colonne] = new Case(ligne, colonne, false);
             }
         })
 
