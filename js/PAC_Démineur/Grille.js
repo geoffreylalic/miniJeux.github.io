@@ -213,6 +213,19 @@ class PresGrille extends Pres {
         return result;
     }
 
+    ajoutDrapeau(clickDroit) {
+        if (clickDroit.src.endsWith("drapeau.jpg")) {
+            clickDroit.parentNode.removeChild(this.image);
+            clickDroit.src = null;
+        }
+        else {
+            clickDroit = document.createElement('img');
+            clickDroit.src = "assets/images/demineur/drapeau.jpg";
+            clickDroit.width = 88;
+            clickDroit.height = 80;
+            clickDroit.appendChild(clickDroit);
+        }
+    }
     /**
      * Permet d'ajouter des indices sur les cases autour d'une mine
      */
@@ -262,18 +275,6 @@ class PresGrille extends Pres {
         });
     }
 
-    /**
-     * Permet d'ajouter un drapeau grace au click droit
-     * @param {} clickDroit 
-     */
-    ajoutDrapeau(clickDroit) {
-        if (!clickDroit.dataset.ligne) {
-            clickDroit = clickDroit.parentNode;
-        }
-        let ligneCase = clickDroit.dataset.ligne;
-        let colonneCase = clickDroit.dataset.colonne;
-        this.tabCase[ligneCase][colonneCase].showDrapeau();
-    }
 
     /**
      * Permet de rechercher un indice dans la grille grace au coordonnés d'une case(ligne/colonne)
@@ -408,30 +409,23 @@ class PresGrille extends Pres {
     remplirTableau() {
         this.tabCase = create2DArray(this.nbLignes);
         let toutesLesDivs = document.querySelectorAll("#grille div");
-        let indexCase;
-        let ligne;
-        let colonne;
+        let indexCase = Math.floor(Math.random() * toutesLesDivs.length);
+        let ligne = Math.floor(indexCase / this.nbColonnes);
+        let colonne = indexCase % this.nbLignes;
+        let tabIndiceMine = [];
 
-        for (let caseCourante = 0; caseCourante < this.nbMines; caseCourante++) {
-            indexCase = Math.floor(Math.random() * toutesLesDivs.length);
-            toutesLesDivs.forEach((div, index) => {
-                ligne = div.dataset.ligne;
-                colonne = div.dataset.colonne;
-                if (index === indexCase) {
-                    if (this.tabCase[ligne][colonne] === undefined) {
-                        this.tabCase[ligne][colonne] = new Case(ligne, colonne, true, div);
 
-                    }
-                    else if (typeof (this.tabCase[ligne][colonne]) === 'object') {
-                        indexCase = Math.floor(Math.random() * toutesLesDivs.length)
-                        index = indexCase;
-                        if (this.tabCase[ligne][colonne] === undefined) {
-                            this.tabCase[ligne][colonne] = new Case(ligne, colonne, true, div);
-                        }
-                    }
-                }
-            });
+        while (tabIndiceMine.length < this.nbMines) {
+            if (!tabIndiceMine.includes(indexCase)) {
+                tabIndiceMine.push(indexCase);
+                ligne = Math.floor(indexCase / this.nbColonnes);
+                colonne = indexCase % this.nbLignes;
+                this.tabCase[ligne][colonne] = new Case(ligne, colonne, true);
+            } else {
+                indexCase = Math.floor(Math.random() * toutesLesDivs.length);
+            }
         }
+
         // on crée les case non miné
         toutesLesDivs.forEach(div => {
             ligne = parseInt(div.dataset.ligne);
