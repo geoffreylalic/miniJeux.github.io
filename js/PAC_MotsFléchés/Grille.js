@@ -69,11 +69,28 @@ class AbsGrille extends Abs {
             this.ajoutLettre(piecejointe);
             this.verificationLigne();
             this.verificationColonne();
+            this.finDePartie();
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
+    }
+
+    finDePartie() {
+        let fin = 0;
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            let mot = this.grilleUser[ligne].join();
+            mot = mot.replaceAll(",", "");
+            this.listeDeMots.forEach(motSolution => {
+                if (motSolution === mot) {
+                    fin++;
+                }
+            });
+        }
+        if (fin === this.nbLignes) {
+            alert("Gagné!!");
+        }
     }
 
     ajoutLettre(piecejointe) {
@@ -89,7 +106,7 @@ class AbsGrille extends Abs {
             for (let indice = 0; indice < this.solutionLigne.length; indice++) {
                 let mot = this.grilleUser[ligne].join();
                 mot = mot.replaceAll(",", "");
-                if (mot.includes(this.solutionLigne[indice])) {
+                if (mot.includes(this.solutionLigne[indice]) && this.listeDeMots[ligne].includes(this.solutionLigne[indice])) {
                     //indice de la premiere lettre
                     let posPremier = mot.indexOf(this.solutionLigne[indice]);
                     let posDernier = posPremier + this.solutionLigne[indice].length;
@@ -112,12 +129,20 @@ class AbsGrille extends Abs {
             }
         }
 
+        let listeDeMotsInverse = create2DArray(11, 9);
+        for (let ligne = 0; ligne < this.nbColonnes; ligne++) {
+            for (let colonne = 0; colonne < this.nbLignes; colonne++) {
+                listeDeMotsInverse[ligne][colonne] = this.listeDeMots[colonne][ligne];
+            }
+        }
+
         for (let ligne = 0; ligne < this.nbColonnes; ligne++) {
             for (let indice = 0; indice < this.solutionColonne.length; indice++) {
                 let mot = grilleInverse[ligne].join();
                 mot = mot.replaceAll(",", "");
-                console.log(mot);
-                if (mot.includes(this.solutionColonne[indice])) {
+                let solutionInverse = listeDeMotsInverse[ligne].join();
+                solutionInverse = solutionInverse.replaceAll(",", "");
+                if (mot.includes(this.solutionColonne[indice]) && solutionInverse.includes(this.solutionColonne[indice])) {
                     //indice de la premiere lettre
                     let posPremier = mot.indexOf(this.solutionColonne[indice]);
                     let posDernier = posPremier + this.solutionColonne[indice].length;
@@ -129,7 +154,7 @@ class AbsGrille extends Abs {
                 }
             }
         }
-        
+
 
     }
 
