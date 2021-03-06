@@ -1,7 +1,3 @@
-h1 {
-    color: red;
-}
-
 
 /* début css démineur */
 
@@ -119,9 +115,39 @@ h1 {
 }
 #banner2{
     display: block;
-    background-color: rgb(75, 167, 75);
-    height: 50px;
+    background-color: rgb(255, 255,255);
+    height: 1000px;
     width: 100%;
+}
+#banner2 p{
+    font-size: 20px;
+   position: relative;
+   padding-top: 10px;
+   text-align: justify;
+   text-decoration-color: black;
+   margin: 0;
+}
+h1{
+   color: black;
+}
+h2{
+    color: black;
+}
+.titreRegles{
+    padding:20px;
+}
+.regles{
+    padding:30px;
+}
+.blockRegles{
+    padding:50px;
+
+}
+.textRegles{
+    background-color:rgb(187, 185, 183);
+    width: 100%;
+    height: 100%;
+    padding: 15px;
 }
 body{
     margin: 0;
@@ -133,7 +159,7 @@ footer{
     display:inline;
     text-align: center;
     width: 100%;
-    background-color: rgba(223, 213, 213, 0.603);
+    background-color: rgb(240, 236, 236);
 }
 #contenuprincipal{
     background-color: rgb(253, 253, 253);
@@ -151,7 +177,6 @@ footer{
 .demineur{
     position: relative;
     top:250px;
-
     padding-top: 50px;
     text-align: center;
     font-size: 30px;
