@@ -111,7 +111,6 @@ class AbsGrille extends Abs {
      */
     diffusion(tableauCase, caseCourante) {
         let result = [];
-        //result.splice(0, result.length);
         let tabCasePres = tableauCase;
 
         //on convertie en int les coordonnées
@@ -122,12 +121,14 @@ class AbsGrille extends Abs {
         if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice === 0) {
             result.push(caseCourante);
             caseCourante.decouvert = true;
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
 
             //Case au sud
             if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].indice === 0) {
                 let listSud = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante + 1][colonneCaseCourante]);
                 result = result.concat(listSud);
                 tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].decouvert = true;
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
             //Case au nord
@@ -135,6 +136,7 @@ class AbsGrille extends Abs {
                 let listNord = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante - 1][colonneCaseCourante]);
                 result = result.concat(listNord);
                 tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].decouvert = true;
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
 
@@ -143,6 +145,7 @@ class AbsGrille extends Abs {
                 let listOuest = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante - 1]);
                 result = result.concat(listOuest);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].decouvert = true;
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
             //Case au est 
@@ -150,12 +153,15 @@ class AbsGrille extends Abs {
                 let listEst = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante + 1]);
                 result = result.concat(listEst);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].decouvert = true;
+                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
+        //si l'indice est supérieur a 0
         } else if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice > 0) {
             let caseARetourner = [caseCourante];
             result = result.concat(caseARetourner);
             caseCourante.decouvert = true;
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
         }
 
         return result;
@@ -473,6 +479,10 @@ class CtrlGrille extends Ctrl {
             this.pres.reçoitMessage(message, piecejointe);
         } else if (message == MESSAGE.UNE_CASE) {
             this.pres.reçoitMessage(message.piecejointe);
+        } else if(message === MESSAGE.POINT){
+            this.enfants.forEach(enfant =>{
+                enfant.reçoitMessageDuParent(message);
+            })
         }
         else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);

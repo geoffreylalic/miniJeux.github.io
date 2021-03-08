@@ -9,6 +9,7 @@ class MESSAGE {
     static UNE_CASE = 'une case non miné';
     static TABLEAU_COORDONNEES = 'envoie du tableau et des coordonnées de la case clické';
     static DIFFUSION_INDICES = "diffusion des indices apres la premiere diffision";
+    static POINT = "envoie des points";
 }
 
 class Abs {

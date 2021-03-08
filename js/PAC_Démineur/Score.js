@@ -22,9 +22,17 @@ class PresScore extends Pres {
         this.nbPoints = 0;
         this.nbClick = 0;
 
-        this.score = document.createElement("div");
-        this.score.innerHTML = "bonjour";
-        document.body.append(this.score);
+        this.titre = document.createElement("h2");
+        this.titre.innerHTML="Score";
+        document.body.appendChild(this.titre);
+
+        this.scoreTxt = document.createElement("div");
+        this.scoreTxt.innerHTML = "Points : ";
+        document.body.append(this.scoreTxt);
+
+        this.scoreNum = document.createElement("span");
+        this.scoreNum.innerHTML= " - ";
+        this.scoreTxt.append(this.scoreNum);
     }
 
     /**
@@ -35,13 +43,21 @@ class PresScore extends Pres {
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.INIT){
-            console.log("dans presenation score");
+            this.scoreNum.innerHTML = "0";
+        } else if(message === MESSAGE.POINT){
+            this.ajoutPoints();
         }
         else{
             result = super.reçoitMessage(message, piecejointe);
         }
         
         return result;
+    }
+
+    ajoutPoints(){
+        let score = parseInt(this.scoreNum.innerHTML);
+        score +=15;
+        this.scoreNum.innerHTML = score;
     }
 
 
@@ -60,7 +76,10 @@ class CtrlScore extends Ctrl {
 
         if(message === MESSAGE.INIT){
             this.init();
-        }else{
+        }else if(message === MESSAGE.POINT){
+            this.pres.reçoitMessage(message);
+        }
+        else{
             result = super.reçoitMessageDuParent(message, piecejointe);
         }
 
