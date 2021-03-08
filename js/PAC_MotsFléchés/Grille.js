@@ -106,13 +106,17 @@ class AbsGrille extends Abs {
             for (let indice = 0; indice < this.solutionLigne.length; indice++) {
                 let mot = this.grilleUser[ligne].join();
                 mot = mot.replaceAll(",", "");
-                if (mot.includes(this.solutionLigne[indice]) && this.listeDeMots[ligne].includes(this.solutionLigne[indice])) {
+                //pour contrer les doublons de réponses justes
+                if (mot.includes(this.solutionLigne[indice]) && this.listeDeMots[ligne].includes(this.solutionLigne[indice]) && mot.indexOf(this.solutionLigne[indice]) === this.listeDeMots[ligne].indexOf(this.solutionLigne[indice])) {
                     //indice de la premiere lettre
                     let posPremier = mot.indexOf(this.solutionLigne[indice]);
                     let posDernier = posPremier + this.solutionLigne[indice].length;
-                    //envoyé a la présentation les lettre marqué;
-                    for (let position = posPremier; position < posDernier; position++) {
-                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
+                    if ((this.listeDeMots[ligne][posPremier - 1] === undefined || this.listeDeMots[ligne][posPremier - 1] === "|" || this.listeDeMots[ligne][posPremier - 1] === "%") && (this.listeDeMots[ligne][posDernier] === undefined || this.listeDeMots[ligne][posDernier] === "|" || this.listeDeMots[ligne][posDernier] === "%")) {
+                        //envoyé a la présentation les lettre marqué;
+                        for (let position = posPremier; position < posDernier; position++) {
+                            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
+                        }
+
                     }
 
                 }
@@ -142,15 +146,17 @@ class AbsGrille extends Abs {
                 mot = mot.replaceAll(",", "");
                 let solutionInverse = listeDeMotsInverse[ligne].join();
                 solutionInverse = solutionInverse.replaceAll(",", "");
-                if (mot.includes(this.solutionColonne[indice]) && solutionInverse.includes(this.solutionColonne[indice])) {
+                if (mot.includes(this.solutionColonne[indice]) && solutionInverse.includes(this.solutionColonne[indice]) && mot.indexOf(this.solutionColonne[indice]) === solutionInverse.indexOf(this.solutionColonne[indice])) {
                     //indice de la premiere lettre
                     let posPremier = mot.indexOf(this.solutionColonne[indice]);
                     let posDernier = posPremier + this.solutionColonne[indice].length;
-                    //envoyé a la présentation les lettre marqué;
-                    for (let position = posPremier; position < posDernier; position++) {
-                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
+                    // on vérifie si avant la premeiere la dernière lettre il y a un indice
+                    if ((solutionInverse[posPremier - 1] === undefined || solutionInverse[posPremier - 1] === "|" || solutionInverse[posPremier - 1] === "%") && (solutionInverse[posDernier] === undefined || solutionInverse[posDernier] === "|" || solutionInverse[posDernier] === "%")) {
+                        //envoyé a la présentation les lettre marqué;
+                        for (let position = posPremier; position < posDernier; position++) {
+                            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
+                        }
                     }
-
                 }
             }
         }

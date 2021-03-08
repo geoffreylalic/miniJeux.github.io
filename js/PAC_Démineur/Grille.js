@@ -168,7 +168,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 1;
+        this.nbMines = 15;
         this.tabMine = [];
         this.nbCaseDecouvertes = 0;
         //pour dessiner la grille grâce au css
@@ -481,6 +481,9 @@ class CtrlGrille extends Ctrl {
 
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
+        this.enfants.forEach(ctrlEnfant =>{
+            ctrlEnfant.reçoitMessageDuParent(MESSAGE.INIT);
+        });
 
     }
 
