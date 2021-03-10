@@ -100,21 +100,8 @@
     pointer-events: none;
 }
 /* fin css motfléchés */
-#banner1{
-    display: block;
-    background-color: rgb(0, 80, 0);
-    height: 1000px;
-    width: 100%;
-}
-#banner1 p{
-     font-size: 30px;
-    position: relative;
-    padding-top: 10px;
-    text-align: center;
-    margin: 0;
-}
+
 #banner2{
-    display: block;
     
 }
 #banner2 p{
@@ -154,7 +141,6 @@ h1{
 }
 body{
     margin: 0;
-    background-image:url(assets/images/demineur/fondecrant.png) ;
 }
 footer{
     margin: 0 auto;
