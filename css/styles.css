@@ -115,9 +115,7 @@
 }
 #banner2{
     display: block;
-    background-color: rgb(255, 255,255);
-    height: 1000px;
-    width: 100%;
+    
 }
 #banner2 p{
     font-size: 20px;
@@ -127,11 +125,16 @@
    text-decoration-color: black;
    margin: 0;
 }
-h1{
-   color: black;
-}
+
+
 h2{
     color: black;
+}
+h1{
+    color: black;
+    text-align: center;
+    padding-top: 40px;
+   
 }
 .titreRegles{
     padding:20px;
@@ -151,6 +154,7 @@ h2{
 }
 body{
     margin: 0;
+    background-image:url(assets/images/demineur/fondecrant.png) ;
 }
 footer{
     margin: 0 auto;
@@ -161,19 +165,8 @@ footer{
     width: 100%;
     background-color: rgb(240, 236, 236);
 }
-#contenuprincipal{
-    background-color: rgb(253, 253, 253);
-    position: relative;
-    height: 500px;
-    width: 100%;
 
-}
-#contenuprincipal li{
-    padding-top: 100px;
-    margin-left: 300px;
-    float: left;
-    list-style-type: none;
-}
+
 .demineur{
     position: relative;
     top:250px;
@@ -199,4 +192,16 @@ footer{
     width: 300px;
     color: black;
 
+}
+.imageAcceuil{
+    margin-left: 350px;
+    top: 100px;
+    position: relative;
+    height:400px;
+    width: 400px;
+    border: solid black;
+    transition: transform .2s
+}
+.imageAcceuil:hover{
+    transform: scale(1.1);
 }
