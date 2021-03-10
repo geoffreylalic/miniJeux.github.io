@@ -70,6 +70,8 @@ class AbsGrille extends Abs {
             this.verificationLigne();
             this.verificationColonne();
             this.finDePartie();
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            this.ctrl.reçoitMessageDeLAbstraction(message, this.listeDeMots);
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -116,7 +118,7 @@ class AbsGrille extends Abs {
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
-
+                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
 
                 }
@@ -156,6 +158,7 @@ class AbsGrille extends Abs {
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
                         }
+                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
                 }
             }
@@ -186,14 +189,30 @@ class PresGrille extends Pres {
         if (message === MESSAGE.INIT) {
             this.dessineGrille();
             this.remplirIndices();
-        } else if (MESSAGE.LETTRE_JUSTE, piecejointe) {
+        } else if (message === MESSAGE.LETTRE_JUSTE) {
             this.marqueLettre(piecejointe);
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            this.triche(piecejointe);
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
         }
 
         return result;
+    }
+
+    triche(listeSolution) {
+        console.log(listeSolution);
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
+                if (listeSolution[ligne][colonne] !== "|" && listeSolution[ligne][colonne] !== "%" && !this.tabCase[ligne][colonne].classList.contains("marqueLettre")) {
+                    this.tabCase[ligne][colonne].innerText = listeSolution[ligne][colonne];
+                    //ajouter une classe css
+                    this.tabCase[ligne][colonne].classList.add("triche");
+                }
+
+            }
+        }
     }
 
     marqueLettre(piecejointe) {
@@ -275,16 +294,37 @@ class CtrlGrille extends Ctrl {
         super(abs, pres);
     }
 
+    reçoitMessageDUnEnfant(message, piecejointe, ctrl) {
+        let result = "";
+
+        // l'utilisateur souhaite tricher
+        if (message === MESSAGE.CLICK_TRICHE) {
+            this.abs.reçoitMessage(message);
+        }
+
+        else {
+            result = super.reçoitMessageDunEnfnant(message, piecejointe, ctrl)
+        }
+        return result;
+    }
+
     reçoitMessageDeLAbstraction(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.LETTRE_JUSTE) {
             this.pres.reçoitMessage(message, piecejointe);
-        } else {
+        } /*else if(message === MESSAGE.MOT_TROUVE){
+            this.enfants.forEach(enfant =>{
+                enfant.reçoitMessageDunParent(message);
+            });
+        }*/ else if (message === MESSAGE.CLICK_TRICHE) {
+            this.pres.reçoitMessage(message, piecejointe);
+        }
+        else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
         }
         return result;
-
     }
+
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.LISTE_MOTS) {
@@ -301,5 +341,8 @@ class CtrlGrille extends Ctrl {
     }
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
+        this.enfants.forEach(enfant => {
+            enfant.reçoitMessageDuParent(MESSAGE.INIT);
+        });
     }
 }

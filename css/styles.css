@@ -99,6 +99,12 @@
     background-color: orange;
     pointer-events: none;
 }
+
+.triche{
+    background-color : red;
+    color : black;
+    transition: 1s;
+}
 /* fin css motfléchés */
 
 #banner2{
