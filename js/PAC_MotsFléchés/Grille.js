@@ -63,7 +63,10 @@ class AbsGrille extends Abs {
         let result = "";
         if (message === MESSAGE.LISTE_MOTS) {
             result = this.listeDeMots;
-        } else if (message === MESSAGE.LISTE_INDICES) {
+        } else if (message === MESSAGE.REJOUER_MAJ) {
+            this.rejouerGrille();
+        }
+        else if (message === MESSAGE.LISTE_INDICES) {
             result = this.listeIndices;
         } else if (message === MESSAGE.LETTRE) {
             this.ajoutLettre(piecejointe);
@@ -80,6 +83,17 @@ class AbsGrille extends Abs {
         }
         return result;
     }
+
+    rejouerGrille() {
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
+                if (this.grilleUser[ligne][colonne] !== "|" && this.grilleUser[ligne][colonne] !== "%") {
+                    this.grilleUser[ligne][colonne] = ".";
+                }
+            }
+        }
+    }
+
 
     finTriche() {
         alert("Fin de partie, vous avez triché");
@@ -213,13 +227,16 @@ class PresGrille extends Pres {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
                 if (listeSolution[ligne][colonne] !== "|" && listeSolution[ligne][colonne] !== "%" && (!this.tabCase[ligne][colonne].classList.contains("marqueLettre") || !this.tabCase[ligne][colonne].classList.contains("triche"))) {
                     this.tabCase[ligne][colonne].innerText = "";
+                    console.log(this.tabCase[ligne][colonne]);
                     // on enleve toutes les classes css aux mots trouvé
                     this.tabCase[ligne][colonne].classList.remove("marqueLettre");
                     this.tabCase[ligne][colonne].classList.remove("triche");
                 }
-
             }
         }
+        this.tabCaseClick.pop();
+        //on met a jour la grille de l'utilisateur dans l'abstraction
+        this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.REJOUER_MAJ);
     }
 
     triche(listeSolution) {
@@ -233,6 +250,7 @@ class PresGrille extends Pres {
 
             }
         }
+        this.tabCaseClick.pop();
     }
 
     marqueLettre(piecejointe) {
@@ -361,7 +379,10 @@ class CtrlGrille extends Ctrl {
             result = this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.LETTRE) {
             this.abs.reçoitMessage(message, piecejointe);
-        } else {
+        } else if (message === MESSAGE.REJOUER_MAJ) {
+            this.abs.reçoitMessage(message);
+        }
+        else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
         return result;
