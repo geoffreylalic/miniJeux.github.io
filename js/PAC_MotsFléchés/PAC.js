@@ -6,6 +6,7 @@ class MESSAGE {
     static LETTRE_JUSTE = "confirmation que la lettre est juste de l'abstraction";
     static CLICK_TRICHE = "bouton clické pour tricher";
     static CLICK_REJOUER = "bouton clické pour rejouer";
+    static REJOUER_MAJ = "mise a jour de la grille utilisateur";
 }
 
 class Abs {
