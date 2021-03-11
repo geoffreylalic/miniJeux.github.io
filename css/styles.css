@@ -1,4 +1,3 @@
-
 /* début css démineur */
 
 #grille {
@@ -20,7 +19,6 @@
     display: grid;
     background-color: rgba(100, 100, 100, 0.5);
 }
-
 
 #grille div:hover {
     background-color: yellow;
@@ -52,7 +50,7 @@
     border: 2px solid rgba(0, 0, 0, 1);
     transition: 0.5s all;
     display: grid;
-    width : 80px;
+    width: 80px;
     text-align: center;
 }
 
@@ -60,113 +58,113 @@
     /*background-color: pink;*/
 }
 
-.haut{
+.haut {
     position: inherit;
-    top : 0;
-    font-size:10px;
+    top: 0;
+    font-size: 10px;
     border-bottom: 2px solid rgba(0, 0, 0, 1);
 }
 
-.bas{
+.bas {
     position: inherit;
-    bottom : 0;
-    font-size:10px;
+    bottom: 0;
+    font-size: 10px;
     border: none;
 }
 
-.divIndice{
-    font-size:10px;
+.divIndice {
+    font-size: 10px;
 }
 
-#grilleMF div .haut:hover{
+#grilleMF div .haut:hover {
     background-color: red;
 }
 
-#grilleMF div .bas:hover{
+#grilleMF div .bas:hover {
     background-color: blue;
 }
 
-.caseARemplir{
-    font-size:60px;
+.caseARemplir {
+    font-size: 60px;
     color: red;
 }
 
-.caseSelectionne{
-    background-color:blueviolet;
+.caseSelectionne {
+    background-color: blueviolet;
 }
 
-.marqueLettre{
+.marqueLettre {
     background-color: orange;
     pointer-events: none;
 }
 
-.triche{
-    background-color : red;
-    color : black;
+.triche {
+    background-color: red;
+    color: black;
     transition: 1s;
+    pointer-events: none;
 }
+
+
 /* fin css motfléchés */
 
-#banner2{
-    
-}
-#banner2 p{
+#banner2 p {
     font-size: 20px;
-   position: relative;
-   padding-top: 10px;
-   text-align: justify;
-   text-decoration-color: black;
-   margin: 0;
+    position: relative;
+    padding-top: 10px;
+    text-align: justify;
+    text-decoration-color: black;
+    margin: 0;
 }
 
-
-h2{
+h2 {
     color: black;
 }
-h1{
+
+h1 {
     color: black;
     text-align: center;
     padding-top: 40px;
-   
 }
-.titreRegles{
-    padding:20px;
-}
-.regles{
-    padding:30px;
-}
-.blockRegles{
-    padding:50px;
 
+.titreRegles {
+    padding: 20px;
 }
-.textRegles{
-    background-color:rgb(187, 185, 183);
+
+.regles {
+    padding: 30px;
+}
+
+.blockRegles {
+    padding: 50px;
+}
+
+.textRegles {
+    background-color: rgb(187, 185, 183);
     width: 100%;
     height: 100%;
     padding: 15px;
 }
 
-.bg-image{
+.bg-image {
     background-image: url('assets/images/demineur/fondecrant.png');
     width: 100%;
     height: 100%;
-    
 }
 
-footer{
+footer {
     margin: 0 auto;
-    position:fixed;
+    position: fixed;
     bottom: 0%;
-    display:inline;
+    display: inline;
     text-align: center;
     width: 100%;
     background-color: rgb(240, 236, 236);
 }
 
-
-.demineur{
+.demineur {
     position: relative;
-    top:250px;
+    top: 250px;
     padding-top: 50px;
     text-align: center;
     font-size: 30px;
@@ -175,11 +173,11 @@ footer{
     height: 300px;
     width: 300px;
     color: black;
-    
 }
-.motFleches{
+
+.motFleches {
     position: relative;
-    top:250px;
+    top: 250px;
     padding-top: 50px;
     text-align: center;
     font-size: 30px;
@@ -188,23 +186,23 @@ footer{
     height: 300px;
     width: 300px;
     color: black;
-
 }
-.imageAcceuil{
 
+.imageAcceuil {
     top: 100px;
     position: relative;
-    height:400px;
+    height: 400px;
     width: 400px;
     border: solid black;
     transition: transform .2s
 }
-.imageAcceuil:hover{
+
+.imageAcceuil:hover {
     transform: scale(1.1);
 }
 
-.backgroundImage{
-    background: url('assets/images/demineur/fondecrant.png')no-repeat center center fixed; 
+.backgroundImage {
+    background: url('assets/images/demineur/fondecrant.png')no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

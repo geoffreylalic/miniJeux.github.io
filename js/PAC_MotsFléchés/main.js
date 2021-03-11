@@ -9,4 +9,6 @@ window.addEventListener("DOMContentLoaded", () => {
     
     ctrlGrille.addEnfant(ctrlScore);
     ctrlGrille.init();
+
+    
 });

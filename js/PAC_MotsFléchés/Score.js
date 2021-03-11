@@ -23,6 +23,8 @@ class PresScore extends Pres {
         this.nbClick = 0;
 
         this.blockScore = document.createElement("div");
+        this.blockScore.id = "Score";
+        this.blockScore.classList.add("col")
         document.body.appendChild(this.blockScore);
 
         this.titre = document.createElement("h2");
@@ -30,8 +32,9 @@ class PresScore extends Pres {
         this.blockScore.appendChild(this.titre);
 
         this.temps = document.createElement("span");
-        this.temps.innerHTML = "00:00";
+        this.temps.id = "temps";
         this.blockScore.append(this.temps);
+        this.startTemps = 1800; //1800 sec = 30 minutes
 
         this.motTrouveLigne = document.createElement("div");
         this.motTrouveLigne.innerHTML = "Mots trouvés sur les lignes : ";
@@ -60,10 +63,10 @@ class PresScore extends Pres {
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.INIT) {
-            this.chrono();
+            setInterval(this.chrono, 1000);
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
-        }
-        else {
+            this.btnRejouer.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_REJOUER));
+        } else {
             result = super.reçoitMessage(message, piecejointe);
         }
 
@@ -72,17 +75,13 @@ class PresScore extends Pres {
 
     //todo :implémenter un chronomètre
     chrono() {
-
+        let minutes = Math.floor( this.startTemps / 60);
+        let secondes =  this.startTemps % 60;
+        let affichageTemps = document.getElementById("temps");
+        affichageTemps.innerHTML = minutes + " " + secondes;
+        this.startTemps--;
+        console.log(this.startTemps)
     }
-
-    ajoutPoints() {
-        let score = parseInt(this.scoreNum.innerHTML);
-        score += 15;
-        this.scoreNum.innerHTML = score;
-    }
-
-
-
 
 }
 
@@ -97,8 +96,7 @@ class CtrlScore extends Ctrl {
 
         if (message === MESSAGE.INIT) {
             this.pres.reçoitMessage(message);
-        }
-        else {
+        } else {
             result = super.reçoitMessageDuParent(message, piecejointe);
         }
 
@@ -113,7 +111,10 @@ class CtrlScore extends Ctrl {
 
         if (message === MESSAGE.CLICK_TRICHE) {
             piecejointe = "rien";
-            this.parent.reçoitMessageDUnEnfant(message,piecejointe,this);
+            this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            piecejointe = "rien";
+            this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
         } else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }

@@ -72,11 +72,17 @@ class AbsGrille extends Abs {
             this.finDePartie();
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.ctrl.reçoitMessageDeLAbstraction(message, this.listeDeMots);
-        }
-        else {
+            this.finTriche();
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            this.ctrl.reçoitMessageDeLAbstraction(message, this.listeDeMots);
+        } else {
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
+    }
+
+    finTriche() {
+        alert("Fin de partie, vous avez triché");
     }
 
     finDePartie() {
@@ -118,7 +124,7 @@ class AbsGrille extends Abs {
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
-                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
+                        //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
 
                 }
@@ -193,16 +199,30 @@ class PresGrille extends Pres {
             this.marqueLettre(piecejointe);
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.triche(piecejointe);
-        }
-        else {
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            this.rejouer(piecejointe);
+        } else {
             result = super.reçoitMessage(message, piecejointe);
         }
 
         return result;
     }
 
+    rejouer(listeSolution) {
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
+                if (listeSolution[ligne][colonne] !== "|" && listeSolution[ligne][colonne] !== "%" && (!this.tabCase[ligne][colonne].classList.contains("marqueLettre") || !this.tabCase[ligne][colonne].classList.contains("triche"))) {
+                    this.tabCase[ligne][colonne].innerText = "";
+                    // on enleve toutes les classes css aux mots trouvé
+                    this.tabCase[ligne][colonne].classList.remove("marqueLettre");
+                    this.tabCase[ligne][colonne].classList.remove("triche");
+                }
+
+            }
+        }
+    }
+
     triche(listeSolution) {
-        console.log(listeSolution);
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
                 if (listeSolution[ligne][colonne] !== "|" && listeSolution[ligne][colonne] !== "%" && !this.tabCase[ligne][colonne].classList.contains("marqueLettre")) {
@@ -219,6 +239,8 @@ class PresGrille extends Pres {
         let ligne = piecejointe[0];
         let colonne = piecejointe[1];
         this.tabCase[ligne][colonne].classList.add("marqueLettre");
+        //pour enlever la derniere case clické en cas de mot trouvé;
+        this.tabCaseClick.pop();
     }
 
     dessineGrille() {
@@ -277,10 +299,13 @@ class PresGrille extends Pres {
         //listener sur clavier
         window.addEventListener("keypress", (evt) => {
             let lettreTape = evt.key.toUpperCase();
-            this.tabCaseClick[0].innerText = lettreTape;
-            let ligne = parseInt(this.tabCaseClick[0].dataset.ligne);
-            let colonne = parseInt(this.tabCaseClick[0].dataset.colonne);
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
+            if (this.tabCaseClick.length > 0) {
+                this.tabCaseClick[0].innerText = lettreTape;
+                let ligne = parseInt(this.tabCaseClick[0].dataset.ligne);
+                let colonne = parseInt(this.tabCaseClick[0].dataset.colonne);
+                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LETTRE, [ligne, colonne, lettreTape]);
+            }
+
         });
     }
 
@@ -300,9 +325,9 @@ class CtrlGrille extends Ctrl {
         // l'utilisateur souhaite tricher
         if (message === MESSAGE.CLICK_TRICHE) {
             this.abs.reçoitMessage(message);
-        }
-
-        else {
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            this.abs.reçoitMessage(message);
+        } else {
             result = super.reçoitMessageDunEnfnant(message, piecejointe, ctrl)
         }
         return result;
@@ -312,14 +337,17 @@ class CtrlGrille extends Ctrl {
         let result = "";
         if (message === MESSAGE.LETTRE_JUSTE) {
             this.pres.reçoitMessage(message, piecejointe);
-        } /*else if(message === MESSAGE.MOT_TROUVE){
-            this.enfants.forEach(enfant =>{
-                enfant.reçoitMessageDunParent(message);
-            });
-        }*/ else if (message === MESSAGE.CLICK_TRICHE) {
-            this.pres.reçoitMessage(message, piecejointe);
         }
-        else {
+        /*else if(message === MESSAGE.MOT_TROUVE){
+                   this.enfants.forEach(enfant =>{
+                       enfant.reçoitMessageDunParent(message);
+                   });
+               }*/
+        else if (message === MESSAGE.CLICK_TRICHE) {
+            this.pres.reçoitMessage(message, piecejointe);
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            this.pres.reçoitMessage(message, piecejointe);
+        } else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
         }
         return result;
@@ -333,8 +361,7 @@ class CtrlGrille extends Ctrl {
             result = this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.LETTRE) {
             this.abs.reçoitMessage(message, piecejointe);
-        }
-        else {
+        } else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
         return result;

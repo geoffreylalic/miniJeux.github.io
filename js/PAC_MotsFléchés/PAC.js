@@ -4,6 +4,8 @@ class MESSAGE {
     static LISTE_INDICES = "liste des indices des mots à trouver";
     static LETTRE = "envoie d'une lettre";
     static LETTRE_JUSTE = "confirmation que la lettre est juste de l'abstraction";
+    static CLICK_TRICHE = "bouton clické pour tricher";
+    static CLICK_REJOUER = "bouton clické pour rejouer";
 }
 
 class Abs {
@@ -12,7 +14,7 @@ class Abs {
     }
 
     reçoitMessage(message, piecejointe) {
-        console.error("reçoitMessage de Abs pas encore implémentée : "+message);
+        console.error("reçoitMessage de Abs pas encore implémentée : " + message);
     }
 }
 
@@ -25,13 +27,13 @@ class Pres {
     }
 
     reçoitMessage(message, piecejointe) {
-        console.error("reçoitMessage de Pres pas encore implémentée : "+message);
+        console.error("reçoitMessage de Pres pas encore implémentée : " + message);
     }
 
 }
 
 
-class Ctrl  {
+class Ctrl {
     constructor(abs, pres) {
         this.abs = abs;
         this.abs.setCtrl(this);
@@ -43,19 +45,19 @@ class Ctrl  {
     }
 
     reçoitMessageDeLAbstraction(message, piecejointe) {
-        console.error("reçoitMessageDeLAbstraction non impl : "+message);
+        console.error("reçoitMessageDeLAbstraction non impl : " + message);
     }
 
     reçoitMessageDUnEnfant(message, piecejointe, ctrl) {
-        console.error("reçoitMessageDUnEnfant non impl : "+message);
+        console.error("reçoitMessageDUnEnfant non impl : " + message);
     }
 
     reçoitMessageDuParent(message, piecejointe) {
-        console.error("reçoitMessageDuParent non impl : "+message);
+        console.error("reçoitMessageDuParent non impl : " + message);
     }
 
     reçoitMessageDeLaPresentation(message, piecejointe) {
-        console.error("reçoitMessageDeLaPresentation non impl : "+message);
+        console.error("reçoitMessageDeLaPresentation non impl : " + message);
     }
 
     addEnfant(controleur) {
