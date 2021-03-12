@@ -62,40 +62,43 @@
     position: inherit;
     top: 0;
     font-size: 10px;
+    font-weight:  bold;
     border-bottom: 2px solid rgba(255, 255, 255, 1);
+    background-color :rgba(29, 161, 12, 0.5);
 }
 
 .bas {
     position: inherit;
     bottom: 0;
     font-size: 10px;
+    font-weight:  bold;
     border: none;
+    background-color :rgba(29, 161, 12, 0.5);
 }
 
 .divIndice {
     font-size: 10px;
+    font-weight:  bold;
+    background-color :rgba(29, 161, 12, 0.5);
 }
 
-#grilleMF div .haut:hover {
-    background-color: red;
-}
 
-#grilleMF div .bas:hover {
-    background-color: blue;
-}
 
 .caseARemplir {
+    background-color: rgba(100, 100, 100, 0.5);
     font-size: 60px;
-    color: red;
+    color: black;
 }
 
 .caseSelectionne {
-    background-color: blueviolet;
+    background-color: hsla(310, 67%, 49%, 0.5) ;
 }
 
 .marqueLettre {
-    background-color: orange;
+    background-color: rgba(236, 162, 0, 0.5);
     pointer-events: none;
+    font-weight:  bold;
+    color: red;
 }
 
 .triche {
@@ -104,6 +107,7 @@
     transition: 1s;
     pointer-events: none;
 }
+
 
 
 /* fin css motfléchés */
@@ -147,8 +151,8 @@ h1 {
 }
 
 body{
-    background:url(../assets/images/demineur/fondecrant.png), rgba(255, 255, 255, 0.4);
-    background-size: 100%;
+    background:url(../assets/images/demineur/fondecrant.png), no-repeat;
+    background-size: cover;
 
 }
 

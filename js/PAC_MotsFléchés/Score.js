@@ -24,7 +24,7 @@ class PresScore extends Pres {
 
         this.blockScore = document.createElement("div");
         this.blockScore.id = "Score";
-        this.blockScore.classList.add("col");
+        this.blockScore.classList.add("text-white");
         document.body.appendChild(this.blockScore);
 
         this.titre = document.createElement("h2");

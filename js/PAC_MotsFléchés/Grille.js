@@ -134,10 +134,14 @@ class AbsGrille extends Abs {
                     let posPremier = mot.indexOf(this.solutionLigne[indice]);
                     let posDernier = posPremier + this.solutionLigne[indice].length;
                     if ((this.listeDeMots[ligne][posPremier - 1] === undefined || this.listeDeMots[ligne][posPremier - 1] === "|" || this.listeDeMots[ligne][posPremier - 1] === "%") && (this.listeDeMots[ligne][posDernier] === undefined || this.listeDeMots[ligne][posDernier] === "|" || this.listeDeMots[ligne][posDernier] === "%")) {
+                        //on supprime le mot trouvé de la solution
+                        this.solutionLigne.splice(indice, 1);
+                        console.log(this.solutionLigne);
                         //envoyé a la présentation les lettre marqué;
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
+                        console.log(this.grilleUser);
                         //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
 
@@ -174,11 +178,13 @@ class AbsGrille extends Abs {
                     let posDernier = posPremier + this.solutionColonne[indice].length;
                     // on vérifie si avant la premeiere la dernière lettre il y a un indice
                     if ((solutionInverse[posPremier - 1] === undefined || solutionInverse[posPremier - 1] === "|" || solutionInverse[posPremier - 1] === "%") && (solutionInverse[posDernier] === undefined || solutionInverse[posDernier] === "|" || solutionInverse[posDernier] === "%")) {
+                        //on supprime le mot trouvé de la solution
+                        this.solutionColonne.splice(indice, 1);
                         //envoyé a la présentation les lettre marqué;
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
                         }
-                        this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
+                        //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
                 }
             }
@@ -196,6 +202,7 @@ class PresGrille extends Pres {
         this.nbColonnes = 11;
         this.tabCase;
 
+        let raw = document.querySelector('row');
         this.grille = document.createElement("div");
         this.grille.id = 'grilleMF';
         document.body.append(this.grille);
@@ -210,7 +217,7 @@ class PresGrille extends Pres {
             this.dessineGrille();
             this.remplirIndices();
         } else if (message === MESSAGE.LETTRE_JUSTE) {
-            this.marqueLettre(piecejointe);
+            this.lettreTrouve(piecejointe);
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.triche(piecejointe);
         } else if (message === MESSAGE.CLICK_REJOUER) {
@@ -227,14 +234,12 @@ class PresGrille extends Pres {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
                 if (listeSolution[ligne][colonne] !== "|" && listeSolution[ligne][colonne] !== "%" && (!this.tabCase[ligne][colonne].classList.contains("marqueLettre") || !this.tabCase[ligne][colonne].classList.contains("triche"))) {
                     this.tabCase[ligne][colonne].innerText = "";
-                    console.log(this.tabCase[ligne][colonne]);
                     // on enleve toutes les classes css aux mots trouvé
                     this.tabCase[ligne][colonne].classList.remove("marqueLettre");
                     this.tabCase[ligne][colonne].classList.remove("triche");
                 }
             }
         }
-        this.tabCaseClick.pop();
         //on met a jour la grille de l'utilisateur dans l'abstraction
         this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.REJOUER_MAJ);
     }
@@ -250,13 +255,13 @@ class PresGrille extends Pres {
 
             }
         }
-        this.tabCaseClick.pop();
     }
 
-    marqueLettre(piecejointe) {
+    lettreTrouve(piecejointe) {
         let ligne = piecejointe[0];
         let colonne = piecejointe[1];
         this.tabCase[ligne][colonne].classList.add("marqueLettre");
+        this.tabCase[ligne][colonne].classList.remove("caseSelectionne");
         //pour enlever la derniere case clické en cas de mot trouvé;
         this.tabCaseClick.pop();
     }
@@ -308,6 +313,7 @@ class PresGrille extends Pres {
                             this.tabCaseClick[0].classList.add("caseSelectionne");
                         } else {
                             this.tabCaseClick.push(this.tabCase[ligne][colonne]);
+                            
                             this.tabCaseClick[0].classList.add("caseSelectionne");
                         }
                     });
