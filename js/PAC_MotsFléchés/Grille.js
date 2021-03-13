@@ -2,8 +2,7 @@ class AbsGrille extends Abs {
     constructor() {
         super();
 
-        this.nbLignes = 9;
-        this.nbColonnes = 11;
+        
 
         //les solutions
         this.listeDeMots = [
@@ -17,6 +16,9 @@ class AbsGrille extends Abs {
             "PESER%IMPER",
             "%RENAIT%TUF"
         ];
+
+        this.nbLignes = this.listeDeMots.length;
+        this.nbColonnes = this.listeDeMots[0].length;
 
         //grille que remplie l'utilisateur
         this.grilleUser = create2DArray(this.nbLignes, this.nbColonnes);
@@ -92,6 +94,13 @@ class AbsGrille extends Abs {
                 }
             }
         }
+        //on remet les solutions lignes et colonnes 
+        this.solutionLigne = [
+            "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
+        ];
+        this.solutionColonne = [
+            "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
+        ];
     }
 
 
@@ -105,6 +114,7 @@ class AbsGrille extends Abs {
             let mot = this.grilleUser[ligne].join();
             mot = mot.replaceAll(",", "");
             this.listeDeMots.forEach(motSolution => {
+                //vérification de chaque ligne de la grille solution par rapport à la grille de l'utilisateur
                 if (motSolution === mot) {
                     fin++;
                 }
@@ -112,6 +122,7 @@ class AbsGrille extends Abs {
         }
         if (fin === this.nbLignes) {
             alert("Gagné!!");
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.GAGNER);
         }
     }
 
@@ -136,12 +147,10 @@ class AbsGrille extends Abs {
                     if ((this.listeDeMots[ligne][posPremier - 1] === undefined || this.listeDeMots[ligne][posPremier - 1] === "|" || this.listeDeMots[ligne][posPremier - 1] === "%") && (this.listeDeMots[ligne][posDernier] === undefined || this.listeDeMots[ligne][posDernier] === "|" || this.listeDeMots[ligne][posDernier] === "%")) {
                         //on supprime le mot trouvé de la solution
                         this.solutionLigne.splice(indice, 1);
-                        console.log(this.solutionLigne);
                         //envoyé a la présentation les lettre marqué;
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
-                        console.log(this.grilleUser);
                         //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
 
@@ -324,6 +333,10 @@ class PresGrille extends Pres {
         window.addEventListener("keypress", (evt) => {
             let lettreTape = evt.key.toUpperCase();
             if (this.tabCaseClick.length > 0) {
+                /* todo: implémenter le backspace
+                if(evt.key == "Backspace"){
+                    console.log("backspace tapé");
+                }*/
                 this.tabCaseClick[0].innerText = lettreTape;
                 let ligne = parseInt(this.tabCaseClick[0].dataset.ligne);
                 let colonne = parseInt(this.tabCaseClick[0].dataset.colonne);
@@ -362,11 +375,11 @@ class CtrlGrille extends Ctrl {
         if (message === MESSAGE.LETTRE_JUSTE) {
             this.pres.reçoitMessage(message, piecejointe);
         }
-        /*else if(message === MESSAGE.MOT_TROUVE){
-                   this.enfants.forEach(enfant =>{
-                       enfant.reçoitMessageDunParent(message);
-                   });
-               }*/
+        else if (message === MESSAGE.GAGNER){
+            this.enfants.forEach(enfant=>{
+                enfant.reçoitMessageDuParent(message);
+            })
+        }
         else if (message === MESSAGE.CLICK_TRICHE) {
             this.pres.reçoitMessage(message, piecejointe);
         } else if (message === MESSAGE.CLICK_REJOUER) {

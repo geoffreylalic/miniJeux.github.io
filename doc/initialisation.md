@@ -34,3 +34,6 @@ Itération 8: Ajouter les règles et solutions de chaque partie dans chaque jeu.
 
 Ressources:
     Pour les diagrammes nous allons utiliser diagrams.net https://app.diagrams.net/ et pour le CSS nous allons utiliser Bootstrap https://getbootstrap.com/ pour faciliter l'affichage de notre site et qu'il soit responsive design.
+
+    Pour le niveau facile des mots fléchés nous avons repris les indices et solutions du site https://www.notretemps.com/jeux/jeux-en-ligne/mots-fleches-force-1-fevrier-2021-gratuits-23,i235504#
+    

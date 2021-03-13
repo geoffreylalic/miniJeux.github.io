@@ -63,39 +63,60 @@ class PresScore extends Pres {
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.INIT) {
-            this.interval = setInterval( () => this.chrono(), 1000);
+            this.interval = setInterval(() => this.chrono(message), 1000);
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
             this.btnRejouer.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_REJOUER));
-        } else {
+        } else if (message === MESSAGE.GAGNER) {
+            this.finTemps(message);
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            this.finTemps(message)
+        } else if (message === MESSAGE.CLICK_REJOUER) {
+            this.recommenceTemps();
+        }
+        else {
             result = super.reçoitMessage(message, piecejointe);
         }
 
         return result;
     }
 
-    //todo :implémenter un chronomètre
-    chrono() {
+    recommenceTemps(){
+        this.startTemps = 1800;
+        clearInterval(this.interval);
+        this.interval = setInterval(() => this.chrono(MESSAGE.INIT), 1000);
+    }
+
+    chrono(message) {
         let minutes = Math.floor(this.startTemps / 60);
         let secondes = this.startTemps % 60;
         let affichageTemps = document.getElementById("temps");
         this.startTemps--;
-        if(minutes < 10){
-            minutes = "0"+minutes;
+        if (minutes < 10) {
+            minutes = "0" + minutes;
         }
-        if(secondes < 10){
-            secondes = "0"+secondes;
+        if (secondes < 10) {
+            secondes = "0" + secondes;
         }
-        if(minutes <= 0 && secondes <= 0){
-            this.finTemps();
+        if (minutes <= 0 && secondes <= 0) {
+            this.finTemps(message);
         }
         affichageTemps.innerHTML = minutes + " " + secondes;
     }
 
-    finTemps(){
+    finTemps(message) {
         clearInterval(this.interval);
         let affichageTemps = document.getElementById("temps");
-        affichageTemps.innerHTML = "Fin du temps imparti";
-        alert("Fin du temps imparti, vous avez perdu!");
+        if (message === MESSAGE.INIT) {
+            console.log(message)
+            affichageTemps.innerHTML += "Fin du temps imparti";
+            alert("Fin du temps imparti, vous avez perdu!");
+        } else if (message === MESSAGE.GAGNER) {
+            affichageTemps.innerHTML += " Vous avez gagné!";
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            affichageTemps.innerHTML += " Vous avez triché!";
+        }
+
+
     }
 
 }
@@ -111,7 +132,10 @@ class CtrlScore extends Ctrl {
 
         if (message === MESSAGE.INIT) {
             this.pres.reçoitMessage(message);
-        } else {
+        } else if (message === MESSAGE.GAGNER) {
+            this.pres.reçoitMessage(message);
+        }
+        else {
             result = super.reçoitMessageDuParent(message, piecejointe);
         }
 
@@ -127,9 +151,11 @@ class CtrlScore extends Ctrl {
         if (message === MESSAGE.CLICK_TRICHE) {
             piecejointe = "rien";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+            this.pres.reçoitMessage(message);
         } else if (message === MESSAGE.CLICK_REJOUER) {
             piecejointe = "rien";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+            this.pres.reçoitMessage(message);
         } else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }

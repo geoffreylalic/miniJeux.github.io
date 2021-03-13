@@ -21,6 +21,7 @@ class MESSAGE {
     static CLICK_TRICHE = "bouton clické pour tricher";
     static CLICK_REJOUER = "bouton clické pour rejouer";
     static REJOUER_MAJ = "mise a jour de la grille utilisateur";
+    static GAGNER = "le joueur à gagner";
 }
 
 class Abs {
