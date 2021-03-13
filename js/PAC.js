@@ -1,4 +1,5 @@
 class MESSAGE {
+    //démineur
     static INIT ="initialisation du jeu";
     static CLICK = "un élément a été clické";
     static CASE_CLICK = "retourne une case clické";
@@ -10,6 +11,16 @@ class MESSAGE {
     static TABLEAU_COORDONNEES = 'envoie du tableau et des coordonnées de la case clické';
     static DIFFUSION_INDICES = "diffusion des indices apres la premiere diffision";
     static POINT = "envoie des points";
+
+    // mots fléchés
+    static INIT = "initialisation du jeu: mots fléchés";
+    static LISTE_MOTS = "liste des mots(soltions)";
+    static LISTE_INDICES = "liste des indices des mots à trouver";
+    static LETTRE = "envoie d'une lettre";
+    static LETTRE_JUSTE = "confirmation que la lettre est juste de l'abstraction";
+    static CLICK_TRICHE = "bouton clické pour tricher";
+    static CLICK_REJOUER = "bouton clické pour rejouer";
+    static REJOUER_MAJ = "mise a jour de la grille utilisateur";
 }
 
 class Abs {

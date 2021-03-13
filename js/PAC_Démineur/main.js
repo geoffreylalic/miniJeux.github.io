@@ -1,8 +1,4 @@
 window.addEventListener("DOMContentLoaded", () => {
-    loadAssets(startGame);
-});
-
-function startGame(assets){
     let absGrille = new AbsGrille();
     let presGrille = new PresGrille();
     let ctrlGrille = new CtrlGrille(absGrille, presGrille);
@@ -14,4 +10,5 @@ function startGame(assets){
     ctrlGrille.addEnfant(ctrlScore);
 
     ctrlGrille.init();
-}
+});
+

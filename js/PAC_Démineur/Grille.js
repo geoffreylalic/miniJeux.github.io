@@ -416,7 +416,7 @@ class PresGrille extends Pres {
      * Permet de remplir la grille de case contenant des mines ou non
      */
     remplirTableau() {
-        this.tabCase = create2DArray(this.nbLignes);
+        this.tabCase = create2DArray(this.nbLignes,this.nbColonnes);
         let toutesLesDivs = document.querySelectorAll("#grille div");
         let indexCase = Math.floor(Math.random() * toutesLesDivs.length);
         let ligne = Math.floor(indexCase / this.nbColonnes);
