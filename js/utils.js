@@ -14,3 +14,8 @@ function create2DArray(rows, columns) {
     }
     return arr;
 }
+
+function selectionNiveau(lvl){
+    niveau = lvl;
+}
+

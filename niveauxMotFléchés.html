@@ -6,11 +6,7 @@
     <title>Mot Fléchés</title>
     <link rel='stylesheet' href="css/styles.css" type='text/css'>
     <script src="js/PAC.js"></script>
-    <script src="js/Niveaux.js"></script>
-    <script src="js/PAC_MotsFléchés/Grille.js"></script>
-    <script src="js/PAC_MotsFléchés/Score.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/PAC_MotsFléchés/main.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
@@ -45,7 +41,28 @@
             </div>
         </div>
     </nav>
-    <h2>Mots Fléchés</h2>
+    <h1>Selectionnez un niveaux</h1>
+
+    <div class="container-fluid">
+
+        <a href="indexMotFléchés.html">
+            <div class="row h1 text-white niveaux" id="facile" onclick="localStorage.setItem('niveau',0);">
+                Facile
+            </div>
+        </a>
+        <a href="indexMotFléchés.html">
+            <div class="row h1 text-white niveaux" id="moyen" onclick="localStorage.setItem('niveau',1);">
+                <a href="indexMotFléchés.html">
+                    Moyen
+            </div>
+        </a>
+        <a href="indexMotFléchés.html">
+            <div class="row h1 text-white niveaux" id="difficile" onclick="localStorage.setItem('niveau',2);">
+                <a href="indexMotFléchés.html">
+                    Dificile
+            </div>
+        </a>
+    </div>
 
     <div class="container-fluid">
         <div class="row"></div>

@@ -1,11 +1,11 @@
 class AbsGrille extends Abs {
-    constructor() {
+    constructor(niveau) {
         super();
-
+        this.niveau = niveau
         
 
         //les solutions
-        this.listeDeMots = [
+        /*this.listeDeMots = [
             "|G|C|G%E|O%",
             "PALACE|CAME",
             "|SARRASIN%S",
@@ -15,10 +15,11 @@ class AbsGrille extends Abs {
             "|LUI|RAMENE",
             "PESER%IMPER",
             "%RENAIT%TUF"
-        ];
+        ];*/
+        this.listeDeMots = JEUX[this.niveau].listeMots;
 
         this.nbLignes = this.listeDeMots.length;
-        this.nbColonnes = this.listeDeMots[0].length;
+        this.nbColonnes = this.listeDeMots[this.niveau].length;
 
         //grille que remplie l'utilisateur
         this.grilleUser = create2DArray(this.nbLignes, this.nbColonnes);
@@ -33,7 +34,7 @@ class AbsGrille extends Abs {
             }
         }
 
-        this.listeIndices = [
+        /*this.listeIndices = [
             "C'EST GÂCHER ---▶", "BEL HÔTEL",
             "LOGIQUE D'ESPRIT", "DUVETEUSE",
             "OISEAU AU PLUMAGE BIGARRE", "COURSE DE FOND",
@@ -54,12 +55,18 @@ class AbsGrille extends Abs {
             "RECOMMENCE A VIVRE",
             "MATERIAU DE CONSTRUCTION POREUX",
         ];
-        this.solutionLigne = [
+        */
+       this.listeIndices = JEUX[this.niveau].listeIndices;
+       this.solutionLigne = JEUX[this.niveau].solutionLigne;
+       this.solutionColonne = JEUX[this.niveau].solutionColonne;
+        /*this.solutionLigne = [
             "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
-        ];
+        ];*/
+        /*
         this.solutionColonne = [
             "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
-        ];
+        ];*/
+
     }
     reçoitMessage(message, piecejointe) {
         let result = "";
@@ -95,12 +102,8 @@ class AbsGrille extends Abs {
             }
         }
         //on remet les solutions lignes et colonnes 
-        this.solutionLigne = [
-            "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
-        ];
-        this.solutionColonne = [
-            "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
-        ];
+        this.solutionLigne = JEUX[this.niveau].solutionLigne;
+        this.solutionColonne = JEUX[this.niveau].solutionColonne;
     }
 
 
