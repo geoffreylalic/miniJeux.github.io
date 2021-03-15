@@ -1,21 +1,12 @@
 class AbsGrille extends Abs {
     constructor(niveau) {
         super();
-        this.niveau = niveau
-        
+        this.niveau = niveau;
+
+        //la difficulté
+        this.difficulte = JEUX[this.niveau].difficulte;
 
         //les solutions
-        /*this.listeDeMots = [
-            "|G|C|G%E|O%",
-            "PALACE|CAME",
-            "|SARRASIN%S",
-            "APITOIEMENT",
-            "|INES|RE%E%",
-            "BLESSER|SUC",
-            "|LUI|RAMENE",
-            "PESER%IMPER",
-            "%RENAIT%TUF"
-        ];*/
         this.listeDeMots = JEUX[this.niveau].listeMots;
 
         this.nbLignes = this.listeDeMots.length;
@@ -34,38 +25,10 @@ class AbsGrille extends Abs {
             }
         }
 
-        /*this.listeIndices = [
-            "C'EST GÂCHER ---▶", "BEL HÔTEL",
-            "LOGIQUE D'ESPRIT", "DUVETEUSE",
-            "OISEAU AU PLUMAGE BIGARRE", "COURSE DE FOND",
-            "QUI A PERDU DE SA HAUTEUR",
-            "CLUB MARSEILLAIS", "LE BAUDET",
-            "LE PREMIER A ËTRE ECLAIRE",
-            "DROGUE", "COMPRIMAIT",
-            "CEREALE", "COMPASSION",
-            "UN PEU BÊTE MAIS PAS MECHANT",
-            "PRENOM ESPAGNOL", "FAIRE DE LA PEINE",
-            "SOUS/MI", "FIN DE VERBE",
-            "NOMBRE DE COTES D'UN HEPTAGONE",
-            "IL A DES CORS SUR LA TÊTE",
-            "EXTRAIT VEGETAL", "PARTIE DU METRE",
-            "C'EST TOUT POUR ELLE", "TARER",
-            "FAIT REVENIR AU BERCAIL", "OU RE",
-            "IL PROTEGE DE LA PLUIE",
-            "RECOMMENCE A VIVRE",
-            "MATERIAU DE CONSTRUCTION POREUX",
-        ];
-        */
-       this.listeIndices = JEUX[this.niveau].listeIndices;
-       this.solutionLigne = JEUX[this.niveau].solutionLigne;
-       this.solutionColonne = JEUX[this.niveau].solutionColonne;
-        /*this.solutionLigne = [
-            "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
-        ];*/
-        /*
-        this.solutionColonne = [
-            "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
-        ];*/
+
+        this.listeIndices = JEUX[this.niveau].listeIndices;
+        this.solutionLigne = JEUX[this.niveau].solutionLigne;
+        this.solutionColonne = JEUX[this.niveau].solutionColonne;
 
     }
     reçoitMessage(message, piecejointe) {
@@ -74,6 +37,8 @@ class AbsGrille extends Abs {
             result = this.listeDeMots;
         } else if (message === MESSAGE.REJOUER_MAJ) {
             this.rejouerGrille();
+        } else if (message === MESSAGE.DIFFICULTE) {
+            this.ctrl.reçoitMessageDeLAbstraction(message, this.difficulte);
         }
         else if (message === MESSAGE.LISTE_INDICES) {
             result = this.listeIndices;
@@ -130,7 +95,7 @@ class AbsGrille extends Abs {
     }
 
     ajoutLettre(piecejointe) {
-        //on place la lettre ajouter dasn this.grilleUSer
+        //on place la lettre ajouter dans this.grilleUSer
         let ligne = piecejointe[0];
         let colonne = piecejointe[1];
         let lettre = piecejointe[2];
@@ -154,7 +119,6 @@ class AbsGrille extends Abs {
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
-                        //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
 
                 }
@@ -196,7 +160,6 @@ class AbsGrille extends Abs {
                         for (let position = posPremier; position < posDernier; position++) {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [position, ligne]);
                         }
-                        //this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.MOT_TROUVE);
                     }
                 }
             }
@@ -214,10 +177,7 @@ class PresGrille extends Pres {
         this.nbColonnes = 11;
         this.tabCase;
 
-        let raw = document.querySelector('row');
-        this.grille = document.createElement("div");
-        this.grille.id = 'grilleMF';
-        document.body.append(this.grille);
+        this.grille = document.querySelector("#grilleMF");
 
         this.tabCaseClick = [];
 
@@ -325,7 +285,7 @@ class PresGrille extends Pres {
                             this.tabCaseClick[0].classList.add("caseSelectionne");
                         } else {
                             this.tabCaseClick.push(this.tabCase[ligne][colonne]);
-                            
+
                             this.tabCaseClick[0].classList.add("caseSelectionne");
                         }
                     });
@@ -377,9 +337,13 @@ class CtrlGrille extends Ctrl {
         let result = "";
         if (message === MESSAGE.LETTRE_JUSTE) {
             this.pres.reçoitMessage(message, piecejointe);
+        } else if (message === MESSAGE.DIFFICULTE) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message, piecejointe);
+            });
         }
-        else if (message === MESSAGE.GAGNER){
-            this.enfants.forEach(enfant=>{
+        else if (message === MESSAGE.GAGNER) {
+            this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message);
             })
         }
@@ -411,6 +375,7 @@ class CtrlGrille extends Ctrl {
     }
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
+        this.abs.reçoitMessage(MESSAGE.DIFFICULTE);
         this.enfants.forEach(enfant => {
             enfant.reçoitMessageDuParent(MESSAGE.INIT);
         });

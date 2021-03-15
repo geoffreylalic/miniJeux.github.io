@@ -206,3 +206,8 @@ footer {
 .imageAcceuil:hover {
     transform: scale(1.1);
 }
+
+#nomJeu{
+    margin: 25px;
+    text-align: center;
+}

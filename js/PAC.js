@@ -22,6 +22,7 @@ class MESSAGE {
     static CLICK_REJOUER = "bouton clické pour rejouer";
     static REJOUER_MAJ = "mise a jour de la grille utilisateur";
     static GAGNER = "le joueur à gagner";
+    static DIFFICULTE = "envoie de la difficulté";
 }
 
 class Abs {

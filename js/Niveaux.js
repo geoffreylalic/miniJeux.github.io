@@ -2,7 +2,7 @@ const JEUX = [
     //niveau facile
     {
         nom: "Mot Fléchés",
-        difficulté: "Facile",
+        difficulte: "Facile",
         listeMots: [
             "|G|C|G%E|O%",
             "PALACE|CAME",
@@ -45,7 +45,7 @@ const JEUX = [
     //niveau moyen
     {
         nom: "Mot Fléchés",
-        difficulté: "Moyen",
+        difficulte: "Moyen",
         listeMots: [
             "|R|R%N|P|N%",
             "GEAI|ALESIA",
@@ -88,7 +88,7 @@ const JEUX = [
     },
     {
         nom: "Mot Fléchés",
-        difficulté: "Difficile",
+        difficulte: "Difficile",
         listeMots: [
             "|S|J%Q|H|M%",
             "AUNE|USAGER",

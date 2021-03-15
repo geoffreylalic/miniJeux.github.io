@@ -22,10 +22,8 @@ class PresScore extends Pres {
         this.nbPoints = 0;
         this.nbClick = 0;
 
-        this.blockScore = document.createElement("div");
-        this.blockScore.id = "Score";
+        this.blockScore = document.querySelector("#score");
         this.blockScore.classList.add("text-white");
-        document.body.appendChild(this.blockScore);
 
         this.titre = document.createElement("h2");
         this.titre.innerHTML = "Score";
@@ -36,13 +34,10 @@ class PresScore extends Pres {
         this.blockScore.append(this.temps);
         this.startTemps = 1800; //1800 sec = 30 minutes
 
-        this.motTrouveLigne = document.createElement("div");
-        this.motTrouveLigne.innerHTML = "Mots trouvés sur les lignes : ";
-        this.blockScore.append(this.motTrouveLigne);
-
-        this.motTrouveLigne = document.createElement("div");
-        this.motTrouveLigne.innerHTML = "Mots trouvés sur les colonnes : ";
-        this.blockScore.append(this.motTrouveLigne);
+        this.difficulte = document.createElement("div");
+        this.difficulte.id = "difficulté";
+        this.difficulte.innerHTML = "Difficulté : ";
+        this.blockScore.append(this.difficulte);
 
         this.btnTriche = document.createElement("button");
         this.btnTriche.id = "btnTriche";
@@ -53,6 +48,14 @@ class PresScore extends Pres {
         this.btnRejouer.innerHTML = "Rejouer";
         this.btnRejouer.id = "btnRejouer";
         this.blockScore.append(this.btnRejouer);
+
+        this.btnChangeNiv = document.createElement("button");
+        this.btnChangeNiv.innerHTML= "Changer de niveau";
+        this.blockScore.append(this.btnChangeNiv);
+
+        this.btnQuitter = document.createElement("button");
+        this.btnQuitter.innerHTML = "Quitter";
+        this.blockScore.append(this.btnQuitter);
     }
 
     /**
@@ -66,7 +69,16 @@ class PresScore extends Pres {
             this.interval = setInterval(() => this.chrono(message), 1000);
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
             this.btnRejouer.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_REJOUER));
-        } else if (message === MESSAGE.GAGNER) {
+            this.btnQuitter.addEventListener("click", () => {
+                window.location.href = "indexPageDacceuil.html";
+            });
+            this.btnChangeNiv.addEventListener("click", () => {
+                window.location.href = "niveauxMotFléchés.html";
+            });
+        } else if (message === MESSAGE.DIFFICULTE) {
+            this.difficulte.innerHTML += piecejointe;
+        }
+        else if (message === MESSAGE.GAGNER) {
             this.finTemps(message);
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.finTemps(message)
@@ -80,7 +92,7 @@ class PresScore extends Pres {
         return result;
     }
 
-    recommenceTemps(){
+    recommenceTemps() {
         this.startTemps = 1800;
         clearInterval(this.interval);
         this.interval = setInterval(() => this.chrono(MESSAGE.INIT), 1000);
@@ -100,7 +112,12 @@ class PresScore extends Pres {
         if (minutes <= 0 && secondes <= 0) {
             this.finTemps(message);
         }
-        affichageTemps.innerHTML = minutes + " " + secondes;
+        if (this.startTemps % 2 === 1) {
+            affichageTemps.innerHTML = minutes + ":" + secondes;
+        } else {
+            affichageTemps.innerHTML = minutes + " " + secondes;
+        }
+
     }
 
     finTemps(message) {
@@ -129,9 +146,11 @@ class CtrlScore extends Ctrl {
 
     reçoitMessageDuParent(message, piecejointe) {
         let result = "";
-
         if (message === MESSAGE.INIT) {
             this.pres.reçoitMessage(message);
+        }
+        else if (message === MESSAGE.DIFFICULTE) {
+            this.pres.reçoitMessage(message, piecejointe);
         } else if (message === MESSAGE.GAGNER) {
             this.pres.reçoitMessage(message);
         }
