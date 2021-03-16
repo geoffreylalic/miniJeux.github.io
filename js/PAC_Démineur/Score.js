@@ -19,20 +19,31 @@ class AbsScore extends Abs {
 class PresScore extends Pres {
     constructor() {
         super();
-        this.nbPoints = 0;
-        this.nbClick = 0;
+        this.blockScore = document.querySelector("#score");
+        this.blockScore.classList.add("text-white");
 
         this.titre = document.createElement("h2");
-        this.titre.innerHTML="Score";
-        document.body.appendChild(this.titre);
+        this.titre.innerHTML = "Score";
+        this.blockScore.appendChild(this.titre);
 
-        this.scoreTxt = document.createElement("div");
-        this.scoreTxt.innerHTML = "Points : ";
-        document.body.append(this.scoreTxt);
+        this.temps = document.createElement("span");
+        this.temps.id = "temps";
+        this.temps.innerHTML = "--:--";
+        this.blockScore.append(this.temps);
+        this.startTemps = 1800; //1800 sec = 30 minutes
 
-        this.scoreNum = document.createElement("span");
-        this.scoreNum.innerHTML= " - ";
-        this.scoreTxt.append(this.scoreNum);
+
+        this.divDrapeau = document.createElement("div");
+        this.divDrapeau.innerHTML = "nombre de Drapeau: ";
+        this.blockScore.append(this.divDrapeau);
+
+        this.divMine = document.createElement("div");
+        this.divMine.innerHTML = "nombre de mine: ";
+        this.blockScore.append(this.divMine);
+
+        this.nbCase = document.createElement("div");
+        this.nbCase.innerHTML = "nombre de case a découvrir: ";
+        this.blockScore.append(this.nbCase);
     }
 
     /**
@@ -42,25 +53,75 @@ class PresScore extends Pres {
      */
     reçoitMessage(message, piecejointe) {
         let result = "";
-        if (message === MESSAGE.INIT){
-            this.scoreNum.innerHTML = "0";
-        } else if(message === MESSAGE.POINT){
-            this.ajoutPoints();
+        
+        if (message === MESSAGE.AJOUTDRAPEAU) {
+            this.nbDrapeau--;
+            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
         }
-        else{
+        else if (message === MESSAGE.ENLEVEDRAPEAU) {
+            this.nbDrapeau++;
+            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;     
+           }
+        else if (message = MESSAGE.ENVOIEDRAPEAU) {
+            this.nbDrapeau = piecejointe;
+            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
+            this.divMine.innerHTML= "nombre de mine: " + this.nbDrapeau;
+        }
+        else if (message === MESSAGE.INIT) {
+            this.interval = setInterval(() => this.chrono(message), 1000);
+            console.log(message);
+            this.btnIndice.addEventListener("click", () => {
+                if (this.nbIndice > 0) {
+                    this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_INDICE);
+                    this.nbIndice--;
+                    this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
+                }
+            });
+        }
+        else {
             result = super.reçoitMessage(message, piecejointe);
         }
-        
+
         return result;
     }
+    rejouerScore() {
+        //pour le chrono
+        this.startTemps = 1800;
+        clearInterval(this.interval);
+        this.interval = setInterval(() => this.chrono(MESSAGE.INIT), 1000);
+    }
+    chrono(message) {
+        let minutes = Math.floor(this.startTemps / 60);
+        let secondes = this.startTemps % 60;
+        let affichageTemps = document.getElementById("temps");
+        this.startTemps--;
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (secondes < 10) {
+            secondes = "0" + secondes;
+        }
+        if (minutes <= 0 && secondes <= 0) {
+            this.finTemps(message);
+        }
+        if (this.startTemps % 2 === 1) {
+            affichageTemps.innerHTML = minutes + ":" + secondes;
+        } else {
+            affichageTemps.innerHTML = minutes + " " + secondes;
+        }
 
-    ajoutPoints(){
-        let score = parseInt(this.scoreNum.innerHTML);
-        score +=15;
-        this.scoreNum.innerHTML = score;
     }
 
-
+    finTemps(message) {
+        clearInterval(this.interval);
+        let affichageTemps = document.getElementById("temps");
+        if (message === MESSAGE.INIT) {
+            affichageTemps.innerHTML += "Fin du temps imparti";
+            alert("Fin du temps imparti, vous avez perdu!");
+        } else if (message === MESSAGE.GAGNER) {
+            affichageTemps.innerHTML += " Vous avez gagné!";
+        }
+    }
 
 
 }
@@ -70,20 +131,27 @@ class CtrlScore extends Ctrl {
     constructor(abs, pres) {
         super(abs, pres);
     }
-
     reçoitMessageDuParent(message, piecejointe) {
         let result = "";
-
-        if(message === MESSAGE.INIT){
-            this.init();
-        }else if(message === MESSAGE.POINT){
+        if (message === MESSAGE.INIT) {
+            this.pres.reçoitMessage(message);
+            
+        }
+        else if (message === MESSAGE.AJOUTDRAPEAU) {
             this.pres.reçoitMessage(message);
         }
-        else{
+        else if (message === MESSAGE.ENLEVEDRAPEAU) {
+            this.pres.reçoitMessage(message);
+        }
+        else if (message === MESSAGE.ENVOIEDRAPEAU) {
+            this.pres.reçoitMessage(message,piecejointe);
+        }
+
+        else {
             result = super.reçoitMessageDuParent(message, piecejointe);
         }
 
-        
+
 
         return result;
 
@@ -103,10 +171,4 @@ class CtrlScore extends Ctrl {
 
         result = super.reçoitMessageDeLAbstraction(message, piecejointe);
     }
-
-    init() {
-        this.pres.reçoitMessage(MESSAGE.INIT);
-    }
-
-
 }

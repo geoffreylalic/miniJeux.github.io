@@ -1,6 +1,5 @@
 class MESSAGE {
     //démineur
-    static INIT ="initialisation du jeu";
     static CLICK = "un élément a été clické";
     static CASE_CLICK = "retourne une case clické";
     static CASE_NON_MINE_COORDONNEES="clique sur une case non miné";
@@ -10,7 +9,10 @@ class MESSAGE {
     static UNE_CASE = 'une case non miné';
     static TABLEAU_COORDONNEES = 'envoie du tableau et des coordonnées de la case clické';
     static DIFFUSION_INDICES = "diffusion des indices apres la premiere diffision";
-    static POINT = "envoie des points";
+    static AJOUTDRAPEAU = "ajoute le  drapeau";
+    static ENLEVEDRAPEAU = "enleve  le  drapeau";
+    static ENVOIEDRAPEAU = "envoie le nombre de drapeau";
+    static NBCASE="envoie le nombre de case à découvrir";
 
     // mots fléchés
     static INIT = "initialisation du jeu: mots fléchés";

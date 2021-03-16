@@ -121,14 +121,12 @@ class AbsGrille extends Abs {
         if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice === 0) {
             result.push(caseCourante);
             caseCourante.decouvert = true;
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
 
             //Case au sud
             if (tabCasePres[ligneCaseCourante + 1] !== undefined && tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].indice === 0) {
                 let listSud = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante + 1][colonneCaseCourante]);
                 result = result.concat(listSud);
                 tabCasePres[ligneCaseCourante + 1][colonneCaseCourante].decouvert = true;
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
             //Case au nord
@@ -136,7 +134,6 @@ class AbsGrille extends Abs {
                 let listNord = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante - 1][colonneCaseCourante]);
                 result = result.concat(listNord);
                 tabCasePres[ligneCaseCourante - 1][colonneCaseCourante].decouvert = true;
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
 
@@ -145,7 +142,6 @@ class AbsGrille extends Abs {
                 let listOuest = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante - 1]);
                 result = result.concat(listOuest);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante - 1].decouvert = true;
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
             //Case au est 
@@ -153,15 +149,13 @@ class AbsGrille extends Abs {
                 let listEst = this.diffusion(tabCasePres, tabCasePres[ligneCaseCourante][colonneCaseCourante + 1]);
                 result = result.concat(listEst);
                 tabCasePres[ligneCaseCourante][colonneCaseCourante + 1].decouvert = true;
-                this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
             }
 
-        //si l'indice est supérieur a 0
+            //si l'indice est supérieur a 0
         } else if (!caseCourante.decouvert && !caseCourante.mine && caseCourante.indice > 0) {
             let caseARetourner = [caseCourante];
             result = result.concat(caseARetourner);
             caseCourante.decouvert = true;
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.POINT);
         }
 
         return result;
@@ -178,12 +172,7 @@ class PresGrille extends Pres {
         this.tabMine = [];
         this.nbCaseDecouvertes = 0;
         //pour dessiner la grille grâce au css
-        this.grille = document.createElement("div");
-        this.grille.id = 'grille';
-        document.body.append(this.grille);
-
-        //écouteur sur la grille
-        //let grilleListenner = document.querySelector('#grille')
+        this.grille = document.querySelector("#grille");
     }
 
     /**
@@ -208,8 +197,8 @@ class PresGrille extends Pres {
                 let clickDroit = evt.target;
                 this.ajoutDrapeau(clickDroit);
             });
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU,this.nbMines);
         }
-
         else if (message == MESSAGE.UNE_CASE) {
         } else {
             //message d'erreur
@@ -218,16 +207,16 @@ class PresGrille extends Pres {
         return result;
     }
 
-    finDePartie(){
+    finDePartie() {
         this.nbCaseDecouvertes = 0;
-        for(let ligne = 0; ligne<this.nbLignes;ligne ++){
-            for (let colonne = 0; colonne<this.nbColonnes;colonne++){
-                if(this.tabCase[ligne][colonne].decouvert){
+        for (let ligne = 0; ligne < this.nbLignes; ligne++) {
+            for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
+                if (this.tabCase[ligne][colonne].decouvert) {
                     this.nbCaseDecouvertes++;
                 }
             }
         }
-        if(this.nbCaseDecouvertes === (this.nbLignes*this.nbColonnes - this.nbMines)){
+        if (this.nbCaseDecouvertes === (this.nbLignes * this.nbColonnes - this.nbMines)) {
             alert("Gagné !!");
         }
     }
@@ -239,10 +228,12 @@ class PresGrille extends Pres {
             img.width = 88;
             img.height = 80;
             clickDroit.appendChild(img);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.AJOUTDRAPEAU);
         } else if (clickDroit.tagName === 'IMG') {
             if (clickDroit.src.endsWith("drapeau.jpg")) {
                 clickDroit.remove();
                 clickDroit.src = null;
+                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENLEVEDRAPEAU);
             }
         }
     }
@@ -330,7 +321,6 @@ class PresGrille extends Pres {
             });
         }
     }
-
     /**
      * Pour changer la couleur d'une case qui n'est pas miné une clické
      * @param {*} div 
@@ -416,7 +406,7 @@ class PresGrille extends Pres {
      * Permet de remplir la grille de case contenant des mines ou non
      */
     remplirTableau() {
-        this.tabCase = create2DArray(this.nbLignes,this.nbColonnes);
+        this.tabCase = create2DArray(this.nbLignes, this.nbColonnes);
         let toutesLesDivs = document.querySelectorAll("#grille div");
         let indexCase = Math.floor(Math.random() * toutesLesDivs.length);
         let ligne = Math.floor(indexCase / this.nbColonnes);
@@ -465,6 +455,20 @@ class CtrlGrille extends Ctrl {
         } else if (message === MESSAGE.DIFFUSION_INDICES) {
             result = this.abs.reçoitMessage(message, piecejointe);
         }
+        else if (message === MESSAGE.AJOUTDRAPEAU) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message);
+            })
+        } else if (message === MESSAGE.ENLEVEDRAPEAU) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message);
+            })
+        }
+        else if (message === MESSAGE.ENVOIEDRAPEAU) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message,piecejointe);
+            })
+        }
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
@@ -479,10 +483,7 @@ class CtrlGrille extends Ctrl {
             this.pres.reçoitMessage(message, piecejointe);
         } else if (message == MESSAGE.UNE_CASE) {
             this.pres.reçoitMessage(message.piecejointe);
-        } else if(message === MESSAGE.POINT){
-            this.enfants.forEach(enfant =>{
-                enfant.reçoitMessageDuParent(message);
-            })
+
         }
         else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
@@ -491,11 +492,13 @@ class CtrlGrille extends Ctrl {
 
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
-        this.enfants.forEach(ctrlEnfant =>{
-            ctrlEnfant.reçoitMessageDuParent(MESSAGE.INIT);
-        });
+        this.enfants.forEach(enfant =>{
+            enfant.reçoitMessageDuParent(MESSAGE.INIT);
+          });
+
 
     }
+
 
 
 }
