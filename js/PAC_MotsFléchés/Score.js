@@ -29,32 +29,44 @@ class PresScore extends Pres {
         this.titre.innerHTML = "Score";
         this.blockScore.appendChild(this.titre);
 
-        this.temps = document.createElement("span");
-        this.temps.id = "temps";
-        this.blockScore.append(this.temps);
-        this.startTemps = 1800; //1800 sec = 30 minutes
-
         this.difficulte = document.createElement("div");
         this.difficulte.id = "difficulté";
         this.difficulte.innerHTML = "Difficulté : ";
         this.blockScore.append(this.difficulte);
 
+        this.temps = document.createElement("span");
+        this.temps.id = "temps";
+        this.temps.innerHTML = "--:--";
+        this.blockScore.append(this.temps);
+        this.startTemps = 1800; //1800 sec = 30 minutes
+
+        this.nbIndice = 5;
+        this.btnIndice = document.createElement("button");
+        this.btnIndice.id = "indice";
+        this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
+        this.btnIndice.classList.add("row");
+        this.blockScore.append(this.btnIndice);
+
         this.btnTriche = document.createElement("button");
         this.btnTriche.id = "btnTriche";
         this.btnTriche.innerHTML = "Triche";
+        this.btnTriche.classList.add("row");
         this.blockScore.append(this.btnTriche);
 
         this.btnRejouer = document.createElement("button");
         this.btnRejouer.innerHTML = "Rejouer";
         this.btnRejouer.id = "btnRejouer";
+        this.btnRejouer.classList.add("row");
         this.blockScore.append(this.btnRejouer);
 
         this.btnChangeNiv = document.createElement("button");
-        this.btnChangeNiv.innerHTML= "Changer de niveau";
+        this.btnChangeNiv.innerHTML = "Changer de niveau";
+        this.btnChangeNiv.classList.add("row");
         this.blockScore.append(this.btnChangeNiv);
 
         this.btnQuitter = document.createElement("button");
         this.btnQuitter.innerHTML = "Quitter";
+        this.btnQuitter.classList.add("row");
         this.blockScore.append(this.btnQuitter);
     }
 
@@ -67,6 +79,13 @@ class PresScore extends Pres {
         let result = "";
         if (message === MESSAGE.INIT) {
             this.interval = setInterval(() => this.chrono(message), 1000);
+            this.btnIndice.addEventListener("click", () => {
+                if(this.nbIndice > 0){
+                    this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_INDICE);
+                    this.nbIndice --;
+                    this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
+                }
+            });
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
             this.btnRejouer.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_REJOUER));
             this.btnQuitter.addEventListener("click", () => {
@@ -83,7 +102,8 @@ class PresScore extends Pres {
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.finTemps(message)
         } else if (message === MESSAGE.CLICK_REJOUER) {
-            this.recommenceTemps();
+            this.rejouerScore();
+            
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -92,10 +112,15 @@ class PresScore extends Pres {
         return result;
     }
 
-    recommenceTemps() {
+    rejouerScore() {
+        //pour le chrono
         this.startTemps = 1800;
         clearInterval(this.interval);
         this.interval = setInterval(() => this.chrono(MESSAGE.INIT), 1000);
+
+        //pour les indices
+        this.nbIndice = 5;
+        this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
     }
 
     chrono(message) {
@@ -124,7 +149,6 @@ class PresScore extends Pres {
         clearInterval(this.interval);
         let affichageTemps = document.getElementById("temps");
         if (message === MESSAGE.INIT) {
-            console.log(message)
             affichageTemps.innerHTML += "Fin du temps imparti";
             alert("Fin du temps imparti, vous avez perdu!");
         } else if (message === MESSAGE.GAGNER) {
@@ -175,7 +199,11 @@ class CtrlScore extends Ctrl {
             piecejointe = "rien";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
             this.pres.reçoitMessage(message);
-        } else {
+        } else if (message === MESSAGE.CLICK_INDICE) {
+            piecejointe = "rien";
+            this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+        }
+        else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
         }
 

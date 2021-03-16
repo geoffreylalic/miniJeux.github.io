@@ -20,6 +20,8 @@ class MESSAGE {
     static LETTRE_JUSTE = "confirmation que la lettre est juste de l'abstraction";
     static CLICK_TRICHE = "bouton clické pour tricher";
     static CLICK_REJOUER = "bouton clické pour rejouer";
+    static CLICK_INDICE = "bouton clické pour avoir un indice";
+    static CLICK_INDICE_RENVOI = "renoi de la lettre demandé en indice";
     static REJOUER_MAJ = "mise a jour de la grille utilisateur";
     static GAGNER = "le joueur à gagner";
     static DIFFICULTE = "envoie de la difficulté";

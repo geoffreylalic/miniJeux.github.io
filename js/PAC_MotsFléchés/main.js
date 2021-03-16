@@ -2,8 +2,6 @@ window.addEventListener("DOMContentLoaded", () => {
     //selection de niveau
     let niveau = localStorage.getItem('niveau');
 
-
-    
     let absGrille = new AbsGrille(niveau);
     let presGrille = new PresGrille();
     let ctrlGrille = new CtrlGrille(absGrille, presGrille);

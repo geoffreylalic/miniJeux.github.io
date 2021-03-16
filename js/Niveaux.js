@@ -33,7 +33,7 @@ const JEUX = [
             "FAIT REVENIR AU BERCAIL", "OU RE",
             "IL PROTEGE DE LA PLUIE",
             "RECOMMENCE A VIVRE",
-            "MATERIAU DE CONSTRUCTION POREUX",
+            "MATERIAU DE CONSTRUCTION POREUX"
         ],
         solutionLigne: [
             "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
@@ -86,6 +86,7 @@ const JEUX = [
             "RESSASSAS", "AUSSIERE", "RIRA", "ARAL", "EGALITE", "NAMIBIE", "LEE", "EURE", "PENSA", "SI", "ST", "IDEST", "NI", "CRU", "EN", "AOC","CRET"
         ]
     },
+    //difficile
     {
         nom: "Mot Fléchés",
         difficulte: "Difficile",
@@ -128,4 +129,5 @@ const JEUX = [
             "SURHUMAIN", "NOISETTE", "JEUNE", "TIR", "CORSAGE", "QUOI", "ARE", "SUSHI", "SA", "HALEINE", "GA", "STORE", "MEDES", "LIN", "RE", "EXEAT"
         ]
     },
+
 ]
