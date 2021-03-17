@@ -26,6 +26,11 @@ class PresScore extends Pres {
         this.titre.innerHTML = "Score";
         this.blockScore.appendChild(this.titre);
 
+        this.difficulte = document.createElement("div");
+        this.difficulte.id = "difficulté";
+        this.difficulte.innerHTML = "Difficulté : ";
+        this.blockScore.append(this.difficulte);
+
         this.temps = document.createElement("span");
         this.temps.id = "temps";
         this.temps.innerHTML = "--:--";
@@ -34,12 +39,35 @@ class PresScore extends Pres {
 
 
         this.divDrapeau = document.createElement("div");
-        this.divDrapeau.innerHTML = "nombre de Drapeau: ";
+        this.divDrapeau.innerHTML = "nombre de drapeau: ";
         this.blockScore.append(this.divDrapeau);
 
         this.divMine = document.createElement("div");
         this.divMine.innerHTML = "nombre de mine: ";
         this.blockScore.append(this.divMine);
+
+
+        this.btnTriche = document.createElement("button");
+        this.btnTriche.id = "btnTriche";
+        this.btnTriche.innerHTML = "Triche";
+        this.btnTriche.classList.add("row");
+        this.blockScore.append(this.btnTriche);
+
+        this.btnRejouer = document.createElement("button");
+        this.btnRejouer.innerHTML = "Rejouer";
+        this.btnRejouer.id = "btnRejouer";
+        this.btnRejouer.classList.add("row");
+        this.blockScore.append(this.btnRejouer);
+
+        this.btnChangeNiv = document.createElement("button");
+        this.btnChangeNiv.innerHTML = "Changer de niveau";
+        this.btnChangeNiv.classList.add("row");
+        this.blockScore.append(this.btnChangeNiv);
+
+        this.btnQuitter = document.createElement("button");
+        this.btnQuitter.innerHTML = "Quitter";
+        this.btnQuitter.classList.add("row");
+        this.blockScore.append(this.btnQuitter);
     }
 
     /**
@@ -49,30 +77,33 @@ class PresScore extends Pres {
      */
     reçoitMessage(message, piecejointe) {
         let result = "";
-        if(this.nbDrapeau===0){
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ARRETCLICKDROIT);
-        }
-        
-        else if (message === MESSAGE.AJOUTDRAPEAU) {
-            this.nbDrapeau--;
-            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
-        }
-        else if (message === MESSAGE.ENLEVEDRAPEAU) {
-            this.nbDrapeau++;
-            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;     
-           }
-        else if (message === MESSAGE.ENVOIEDRAPEAU) {
-            this.nbDrapeau = piecejointe;
-            this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
-            this.divMine.innerHTML= "nombre de mine: " + this.nbDrapeau;
-        }
-        else if (message === MESSAGE.INIT) {
+        if (message === MESSAGE.INIT) {
             this.interval = setInterval(() => this.chrono(message), 1000);
+            this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
+            this.btnRejouer.addEventListener("click", () => { window.location.href = "indexDemineur.html"; });
+            this.btnQuitter.addEventListener("click", () => {
+                window.location.href = "indexPageDacceuil.html";
+            });
+            this.btnChangeNiv.addEventListener("click", () => {
+                window.location.href = "niveauxDémineur.html";
+            });
+        } else if (message === MESSAGE.ENVOIEDRAPEAU) {
+            this.divDrapeau.innerHTML = "nombre de drapeau: " + piecejointe;
+        } else if (message === MESSAGE.ENVOIEMINES) {
+            this.divMine.innerHTML = "nombre de mine: " + piecejointe;
+        }
+        else if (message === MESSAGE.GAGNER) {
+            this.finTemps(message);
+        } else if (message === MESSAGE.PERDU) {
+            this.finTemps(message);
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            this.finTemps(message);
+        }else if(message === MESSAGE.DIFFICULTE){
+            this.difficulte.innerHTML = "Difficulté : " + piecejointe;
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
         }
-
         return result;
     }
     rejouerScore() {
@@ -111,6 +142,10 @@ class PresScore extends Pres {
             alert("Fin du temps imparti, vous avez perdu!");
         } else if (message === MESSAGE.GAGNER) {
             affichageTemps.innerHTML += " Vous avez gagné!";
+        } else if (message === MESSAGE.PERDU) {
+            affichageTemps.innerHTML += " Vous avez perdu!";
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            affichageTemps.innerHTML += " Vous avez triché!";
         }
     }
 
@@ -126,18 +161,16 @@ class CtrlScore extends Ctrl {
         let result = "";
         if (message === MESSAGE.INIT) {
             this.pres.reçoitMessage(message);
-            
-        } 
-        else if (message === MESSAGE.AJOUTDRAPEAU) {
-            this.pres.reçoitMessage(message);
+        } else if (message === MESSAGE.ENVOIEDRAPEAU) {
+            this.pres.reçoitMessage(message, piecejointe);
+        } else if (message === MESSAGE.ENVOIEMINES) {
+            this.pres.reçoitMessage(message, piecejointe);
         }
-        else if (message === MESSAGE.ARRETCLICKDROIT) {
+        else if (message === MESSAGE.GAGNER) {
             this.pres.reçoitMessage(message);
-        }
-        else if (message === MESSAGE.ENLEVEDRAPEAU) {
+        } else if (message === MESSAGE.PERDU) {
             this.pres.reçoitMessage(message);
-        }
-        else if (message === MESSAGE.ENVOIEDRAPEAU) {
+        } else if(message === MESSAGE.DIFFICULTE){
             this.pres.reçoitMessage(message,piecejointe);
         }
 
@@ -154,7 +187,18 @@ class CtrlScore extends Ctrl {
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
 
-        result = super.reçoitMessageDeLaPresentation(message, piecejointe);
+        if (message === MESSAGE.CLICK_TRICHE) {
+            piecejointe = "";
+            this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+            this.pres.reçoitMessage(message);
+        } else if (message === MESSAGE.CLICK_INDICE) {
+            piecejointe = "";
+            this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
+        }
+        else {
+            result = super.reçoitMessageDeLaPresentation(message, piecejointe);
+        }
+
 
         return result;
     }

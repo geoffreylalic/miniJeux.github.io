@@ -14,6 +14,8 @@ class MESSAGE {
     static ENVOIEDRAPEAU = "envoie le nombre de drapeau";
     static NBCASE="envoie le nombre de case à découvrir";
     static ARRETCLICKDROIT="arret du click droit";
+    static PERDU = "le joueur a perdu";
+    static ENVOIEMINES = "on enoie le nb de mine";
 
     // mots fléchés
     static INIT = "initialisation du jeu: mots fléchés";
@@ -28,6 +30,7 @@ class MESSAGE {
     static REJOUER_MAJ = "mise a jour de la grille utilisateur";
     static GAGNER = "le joueur à gagner";
     static DIFFICULTE = "envoie de la difficulté";
+    static NIVEAU = "envoie du niveau";
 }
 
 class Abs {

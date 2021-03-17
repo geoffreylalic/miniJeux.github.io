@@ -1,20 +1,19 @@
 /* début css démineur */
 
 #grille {
-    width: 800px;
+    width: 720px;
     height: 720px;
-    border: 1px;
-    border: 1px solid #999;
     display: grid;
     /* 1fr signifie "une fraction de la largeur de la grille", le repeat dit "9 cases" 
        égales à une fraction (1/9ème) Voir https://css-tricks.com/snippets/css/complete-guide-grid/ */
     grid-template-columns: repeat(9, 1fr);
     /* Pour contraindre la hauteur des lignes */
     grid-auto-rows: 80px;
+    
 }
 
 #grille div {
-    border: 2px solid rgba(0, 0, 0, 1);
+    border: 1px solid rgba(0, 0, 0, 1);
     transition: 0.5s all;
     display: grid;
     background-color: rgba(100, 100, 100, 0.5);
@@ -25,7 +24,7 @@
 }
 
 .caseClick {
-    background-color: chartreuse;
+    pointer-events: none;
 }
 
 
@@ -210,4 +209,8 @@ footer {
 #nomJeu{
     margin: 25px;
     text-align: center;
+}
+
+#score{
+    padding-left: 30px;
 }

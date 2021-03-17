@@ -1,6 +1,19 @@
+console.log("niveau "+localStorage.getItem("niveau"));
+//récupération de localStorage
+let chargementJoueur = localStorage.getItem("listeJoueur");
+chargementJoueur = JSON.parse(chargementJoueur);
+let joueurActif;
+chargementJoueur.forEach(joueur => {
+    if (joueur.actif === true) { 
+        joueurActif = joueur;
+    }
+});
+console.log(joueurActif);
+
 class AbsGrille extends Abs {
     constructor() {
         super();
+
     }
 
     /**
@@ -163,16 +176,20 @@ class AbsGrille extends Abs {
 }
 
 class PresGrille extends Pres {
-    constructor() {
+    constructor(niveau) {
         super();
+
+        this.niveau = niveau;
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 10;
+        this.nbMines = JEUX[this.niveau].nbMines;
+        this.nbDrapeau = this.nbMines;
         this.tabMine = [];
         this.nbCaseDecouvertes = 0;
         //pour dessiner la grille grâce au css
         this.grille = document.querySelector("#grille");
+        this.difficulte = JEUX[this.niveau].difficulte;
     }
 
     /**
@@ -186,6 +203,9 @@ class PresGrille extends Pres {
             this.construireGrille();
             this.remplirTableau();
             this.ajouterIndices();
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU, this.nbDrapeau);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEMINES, this.nbMines);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.DIFFICULTE, this.difficulte);
             //abonnement de la fonction à l'écouteur
             this.grille.addEventListener("click", (evt) => {
                 let clickCible = evt.target;
@@ -193,25 +213,39 @@ class PresGrille extends Pres {
                 this.finDePartie();
             });
             this.grille.addEventListener("contextmenu", (evt) => {
-                evt.preventDefault();
-                let clickDroit = evt.target;
-                this.ajoutDrapeau(clickDroit, message);
+                if (evt.target.tagName === 'IMG') {
+
+                    let clickDroit = evt.target;
+                    this.ajoutDrapeau(clickDroit);
+
+
+                }
+                if (this.nbDrapeau > 0) {
+                    evt.preventDefault();
+                    let clickDroit = evt.target;
+                    this.ajoutDrapeau(clickDroit);
+                } else {
+                    evt.preventDefault();
+                }
             });
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU, this.nbMines);
+        } else if (message === MESSAGE.CLICK_TRICHE) {
+            this.afficherMine();
         }
-        else if (message == MESSAGE.UNE_CASE) {
-        }else if(message===MESSAGE.ARRETCLICKDROIT){
-            this.grille.addEventListener("contextmenu", (evt) => {
-                evt.preventDefault();
-                let clickDroit = evt.target;
-                this.ajoutDrapeau(clickDroit, message);
-            });
-        }
-         else {
+        else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
+    }
+
+    afficherMine() {
+        let toutesLesDivs = document.querySelectorAll("#grille div");
+        toutesLesDivs.forEach(div => {
+            div.classList.add("mineTrouve");
+            if (this.tabCase[div.dataset.ligne][div.dataset.colonne].mine) {
+                div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image);
+            }
+        });
     }
 
     finDePartie() {
@@ -225,26 +259,28 @@ class PresGrille extends Pres {
         }
         if (this.nbCaseDecouvertes === (this.nbLignes * this.nbColonnes - this.nbMines)) {
             alert("Gagné !!");
+            joueurActif.nbPartieDem +=1;
+            console.log('gagné ' + joueurActif);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.GAGNER);
         }
     }
 
-    ajoutDrapeau(clickDroit, message) {
-        if (message === MESSAGE.INIT) {
-            if (clickDroit.tagName === 'DIV') {
-                let img = document.createElement("img");
-                img.src = "assets/images/demineur/drapeau.jpg";
-                img.width = 88;
-                img.height = 80;
-                clickDroit.appendChild(img);
-                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.AJOUTDRAPEAU);
-            } else if (clickDroit.tagName === 'IMG') {
-                if (clickDroit.src.endsWith("drapeau.jpg")) {
-                    clickDroit.remove();
-                    clickDroit.src = null;
-                    this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENLEVEDRAPEAU);
-                }
+    ajoutDrapeau(clickDroit) {
+        if (clickDroit.tagName === 'DIV') {
+            let img = document.createElement("img");
+            img.src = "assets/images/demineur/drapeau.jpg";
+            img.width = 80;
+            img.height = 80;
+            clickDroit.appendChild(img);
+            this.nbDrapeau--;
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU, this.nbDrapeau);
+        } else if (clickDroit.tagName === 'IMG') {
+            if (clickDroit.src.endsWith("drapeau.jpg")) {
+                clickDroit.remove();
+                clickDroit.src = "";
+                this.nbDrapeau++;
+                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU, this.nbDrapeau);
             }
-
         }
     }
     /**
@@ -308,11 +344,15 @@ class PresGrille extends Pres {
         let largeur = Math.floor(Math.sqrt(toutesLesDivs.length));
         if (this.tabCase[ligne][colonne].mine) {
             toutesLesDivs.forEach(div => {
+                div.classList.add("caseClick");
                 if (this.tabCase[div.dataset.ligne][div.dataset.colonne].mine) {
-                    div.append((this.tabCase[div.dataset.ligne][div.dataset.colonne].image));
+                    div.append(this.tabCase[div.dataset.ligne][div.dataset.colonne].image);
                 }
             });
             alert('Perdu!');
+            joueurActif.nbPartieDem +=1;
+            console.log('perdu ' + joueurActif);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.PERDU);
         }
         else if (!this.tabCase[ligne][colonne].mine) {
             //on effectue la diffusion des case ayant des indices 0 par rapport a la case clické
@@ -329,6 +369,8 @@ class PresGrille extends Pres {
                 let colonne = parseInt(caseIndice.colonne)
                 this.caseNonMine(toutesLesDivs.item(ligne * largeur + colonne));
             });
+        } else {
+            console.log("la case n'est plus disponible");
         }
     }
     /**
@@ -346,56 +388,55 @@ class PresGrille extends Pres {
                     break;
                 case 1:
                     image.src = "assets/images/demineur/1.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 2:
                     image.src = "assets/images/demineur/2.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 3:
                     image.src = "assets/images/demineur/3.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 4:
                     image.src = "assets/images/demineur/4.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 5:
                     image.src = "assets/images/demineur/5.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 6:
                     image.src = "assets/images/demineur/6.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 7:
                     image.src = "assets/images/demineur/7.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
                 case 8:
                     image.src = "assets/images/demineur/8.png";
-                    image.width = 88;
+                    image.width = 80;
                     image.height = 80;
                     div.append(image);
                     break;
             }
         }
-
-
+        div.classList.add("caseClick");
     }
 
     /**
@@ -455,6 +496,21 @@ class CtrlGrille extends Ctrl {
         super(abs, pres);
     }
 
+    reçoitMessageDUnEnfant(message, piecejointe, ctrl) {
+        let result = "";
+
+        // l'utilisateur souhaite tricher
+        if (message === MESSAGE.CLICK_TRICHE) {
+            this.pres.reçoitMessage(message);
+        } else if (message === MESSAGE.CLICK_INDICE) {
+            this.pres.reçoitMessage(message);
+        }
+        else {
+            result = super.reçoitMessageDunEnfnant(message, piecejointe, ctrl)
+        }
+        return result;
+    }
+
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.CASE_CLICK) {
@@ -464,25 +520,29 @@ class CtrlGrille extends Ctrl {
             result = this.abs.reçoitMessage(MESSAGE.TABLEAU_CASE, piecejointe);
         } else if (message === MESSAGE.DIFFUSION_INDICES) {
             result = this.abs.reçoitMessage(message, piecejointe);
-        }
-        else if (message === MESSAGE.AJOUTDRAPEAU) {
-            this.enfants.forEach(enfant => {
-                enfant.reçoitMessageDuParent(message);
-            })
-        } else if (message === MESSAGE.ARRETCLICKDROIT) {
-            this.enfants.forEach(enfant => {
-                this.pres.reçoitMessage(message);
-            })
-        }
-        else if (message === MESSAGE.ENLEVEDRAPEAU) {
-            this.enfants.forEach(enfant => {
-                enfant.reçoitMessageDuParent(message);
-            })
-        }
-        else if (message === MESSAGE.ENVOIEDRAPEAU) {
+        } else if (message === MESSAGE.ENVOIEDRAPEAU) {
             this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message, piecejointe);
-            })
+            });
+        } else if (message === MESSAGE.ENVOIEMINES) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message, piecejointe);
+            });
+        } else if (message === MESSAGE.DIFFICULTE) {
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message, piecejointe);
+            });
+        }
+        else if (message === MESSAGE.GAGNER) {
+            this.majJoueur();
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message, piecejointe);
+            });
+        } else if (message === MESSAGE.PERDU) {
+            this.majJoueur();
+            this.enfants.forEach(enfant => {
+                enfant.reçoitMessageDuParent(message, piecejointe);
+            });
         }
         else {
             result = super.reçoitMessageDeLaPresentation(message, piecejointe);
@@ -503,6 +563,11 @@ class CtrlGrille extends Ctrl {
         else {
             result = super.reçoitMessageDeLAbstraction(message, piecejointe);
         }
+    }
+
+    majJoueur(){
+        chargementJoueur = JSON.stringify(chargementJoueur);
+        localStorage.setItem("listeJoueur",chargementJoueur);
     }
 
     init() {

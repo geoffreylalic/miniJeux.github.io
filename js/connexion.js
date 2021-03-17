@@ -39,6 +39,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    let deconnexion = document.querySelector("#btnDeconnex");
+    
+    deconnexion.addEventListener("click",()=>{
+        let listeJoueur = localStorage.getItem("listeJoueur");
+        listeJoueur = JSON.parse(listeJoueur);
+        listeJoueur.forEach(joueur =>{
+            joueur.actif = false;
+        });
+    });
+
     let register = document.querySelector("#btnRegister");
     register.addEventListener("click", () => {
         let pseudoRegister = document.querySelector("#pseudoRegister").value;

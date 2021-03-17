@@ -103,7 +103,6 @@ class PresScore extends Pres {
             this.finTemps(message)
         } else if (message === MESSAGE.CLICK_REJOUER) {
             this.rejouerScore();
-            
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -192,15 +191,15 @@ class CtrlScore extends Ctrl {
         let result = "";
 
         if (message === MESSAGE.CLICK_TRICHE) {
-            piecejointe = "rien";
+            piecejointe = "";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
             this.pres.reçoitMessage(message);
         } else if (message === MESSAGE.CLICK_REJOUER) {
-            piecejointe = "rien";
+            piecejointe = "";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
             this.pres.reçoitMessage(message);
         } else if (message === MESSAGE.CLICK_INDICE) {
-            piecejointe = "rien";
+            piecejointe = "";
             this.parent.reçoitMessageDUnEnfant(message, piecejointe, this);
         }
         else {

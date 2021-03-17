@@ -39,7 +39,7 @@ const JEUX = [
             "PALACE", "CAME", "SARRASIN", "APITOIEMENT", "INES", "RE", "BLESSER", "SUC", "LUI", "RAMENE", "PESER", "IMPER", "RENAIT", "TUF"
         ],
         solutionColonne: [
-            "MARAT","GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
+            "MARAT", "GASPILLER", "LAINEUSE", "CARTESIEN", "CROSS", "RA", "GEAI", "ER", "SERRAIT", "ECIME", "MM", "ANE", "SEPT", "OM", "NEUNEU", "EST", "CERF"
         ]
     },
     //niveau moyen
@@ -70,7 +70,7 @@ const JEUX = [
             "DEUX CENTS A ROME", "LOCUTION LATINE",
             "BRILLANT SUJET", "MANQUE DE SALIVE",
             "PREMIERE LETTRES", "MER EN ASIE",
-            "IL EST GRAND EN BORD DE MER","RIVIERE", 
+            "IL EST GRAND EN BORD DE MER", "RIVIERE",
             "ESCARPEMENT ROCHEUX",
             "NOBLE", "IL PERMET DE REVER DE L'IMPOSSIBLE",
             "GRAVE", "VICTIME DE CHARLOTTE CORDAY",
@@ -83,7 +83,7 @@ const JEUX = [
             "GEAI", "ALESIA", "SUREMENT", "ASSAGIES", "CC", "AS", "AB", "AIR", "ASIALIE", "DUC", "SERIEUSE", "RISEE", "SELENE", "TNT"
         ],
         solutionColonne: [
-            "RESSASSAS", "AUSSIERE", "RIRA", "ARAL", "EGALITE", "NAMIBIE", "LEE", "EURE", "PENSA", "SI", "ST", "IDEST", "NI", "CRU", "EN", "AOC","CRET"
+            "RESSASSAS", "AUSSIERE", "RIRA", "ARAL", "EGALITE", "NAMIBIE", "LEE", "EURE", "PENSA", "SI", "ST", "IDEST", "NI", "CRU", "EN", "AOC", "CRET"
         ]
     },
     //difficile
@@ -120,7 +120,7 @@ const JEUX = [
             "AFFAIRE EN COUR", "AUTEUR DU COUP DE SIROCCO",
             "FIRME",
             "VALLEE ENGLOUTIE",
-            "CAROUBIER AFRICAIN","IL COMPTE QUATRE DIMANCHES"
+            "CAROUBIER AFRICAIN", "IL COMPTE QUATRE DIMANCHES"
         ],
         solutionLigne: [
             "AUNE", "USAGER", "ROUCOULADE", "CHINOISE", "USER", "HISSE", "AME", "SAINT", "ATTAR", "EOLE", "LITIGES", "RIA", "NERE", "AVENT"
@@ -129,5 +129,20 @@ const JEUX = [
             "SURHUMAIN", "NOISETTE", "JEUNE", "TIR", "CORSAGE", "QUOI", "ARE", "SUSHI", "SA", "HALEINE", "GA", "STORE", "MEDES", "LIN", "RE", "EXEAT"
         ]
     },
+    {
+        nom: "Démineur",
+        difficulte: "Facile",
+        nbMines : 10,
+    },
+    {
+        nom: "Démineur",
+        difficulte: "Moyen",
+        nbMines : 20,
+    },
+    {
+        nom: "Démineur",
+        difficulte: "Difficile",
+        nbMines : 30,
+    }
 
 ]
