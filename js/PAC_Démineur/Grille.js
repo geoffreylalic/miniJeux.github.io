@@ -168,7 +168,7 @@ class PresGrille extends Pres {
         this.nbLignes = 9;
         this.nbColonnes = 9;
         this.tabCase;
-        this.nbMines = 15;
+        this.nbMines = 10;
         this.tabMine = [];
         this.nbCaseDecouvertes = 0;
         //pour dessiner la grille grâce au css
@@ -195,12 +195,19 @@ class PresGrille extends Pres {
             this.grille.addEventListener("contextmenu", (evt) => {
                 evt.preventDefault();
                 let clickDroit = evt.target;
-                this.ajoutDrapeau(clickDroit);
+                this.ajoutDrapeau(clickDroit, message);
             });
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU,this.nbMines);
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENVOIEDRAPEAU, this.nbMines);
         }
         else if (message == MESSAGE.UNE_CASE) {
-        } else {
+        }else if(message===MESSAGE.ARRETCLICKDROIT){
+            this.grille.addEventListener("contextmenu", (evt) => {
+                evt.preventDefault();
+                let clickDroit = evt.target;
+                this.ajoutDrapeau(clickDroit, message);
+            });
+        }
+         else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
@@ -221,20 +228,23 @@ class PresGrille extends Pres {
         }
     }
 
-    ajoutDrapeau(clickDroit) {
-        if (clickDroit.tagName === 'DIV') {
-            let img = document.createElement("img");
-            img.src = "assets/images/demineur/drapeau.jpg";
-            img.width = 88;
-            img.height = 80;
-            clickDroit.appendChild(img);
-            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.AJOUTDRAPEAU);
-        } else if (clickDroit.tagName === 'IMG') {
-            if (clickDroit.src.endsWith("drapeau.jpg")) {
-                clickDroit.remove();
-                clickDroit.src = null;
-                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENLEVEDRAPEAU);
+    ajoutDrapeau(clickDroit, message) {
+        if (message === MESSAGE.INIT) {
+            if (clickDroit.tagName === 'DIV') {
+                let img = document.createElement("img");
+                img.src = "assets/images/demineur/drapeau.jpg";
+                img.width = 88;
+                img.height = 80;
+                clickDroit.appendChild(img);
+                this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.AJOUTDRAPEAU);
+            } else if (clickDroit.tagName === 'IMG') {
+                if (clickDroit.src.endsWith("drapeau.jpg")) {
+                    clickDroit.remove();
+                    clickDroit.src = null;
+                    this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ENLEVEDRAPEAU);
+                }
             }
+
         }
     }
     /**
@@ -459,14 +469,19 @@ class CtrlGrille extends Ctrl {
             this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message);
             })
-        } else if (message === MESSAGE.ENLEVEDRAPEAU) {
+        } else if (message === MESSAGE.ARRETCLICKDROIT) {
+            this.enfants.forEach(enfant => {
+                this.pres.reçoitMessage(message);
+            })
+        }
+        else if (message === MESSAGE.ENLEVEDRAPEAU) {
             this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message);
             })
         }
         else if (message === MESSAGE.ENVOIEDRAPEAU) {
             this.enfants.forEach(enfant => {
-                enfant.reçoitMessageDuParent(message,piecejointe);
+                enfant.reçoitMessageDuParent(message, piecejointe);
             })
         }
         else {
@@ -492,9 +507,9 @@ class CtrlGrille extends Ctrl {
 
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
-        this.enfants.forEach(enfant =>{
+        this.enfants.forEach(enfant => {
             enfant.reçoitMessageDuParent(MESSAGE.INIT);
-          });
+        });
 
 
     }

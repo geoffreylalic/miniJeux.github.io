@@ -13,6 +13,7 @@ class MESSAGE {
     static ENLEVEDRAPEAU = "enleve  le  drapeau";
     static ENVOIEDRAPEAU = "envoie le nombre de drapeau";
     static NBCASE="envoie le nombre de case à découvrir";
+    static ARRETCLICKDROIT="arret du click droit";
 
     // mots fléchés
     static INIT = "initialisation du jeu: mots fléchés";

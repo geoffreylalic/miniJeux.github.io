@@ -40,10 +40,6 @@ class PresScore extends Pres {
         this.divMine = document.createElement("div");
         this.divMine.innerHTML = "nombre de mine: ";
         this.blockScore.append(this.divMine);
-
-        this.nbCase = document.createElement("div");
-        this.nbCase.innerHTML = "nombre de case a découvrir: ";
-        this.blockScore.append(this.nbCase);
     }
 
     /**
@@ -53,8 +49,11 @@ class PresScore extends Pres {
      */
     reçoitMessage(message, piecejointe) {
         let result = "";
+        if(this.nbDrapeau===0){
+            this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.ARRETCLICKDROIT);
+        }
         
-        if (message === MESSAGE.AJOUTDRAPEAU) {
+        else if (message === MESSAGE.AJOUTDRAPEAU) {
             this.nbDrapeau--;
             this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
         }
@@ -62,21 +61,13 @@ class PresScore extends Pres {
             this.nbDrapeau++;
             this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;     
            }
-        else if (message = MESSAGE.ENVOIEDRAPEAU) {
+        else if (message === MESSAGE.ENVOIEDRAPEAU) {
             this.nbDrapeau = piecejointe;
             this.divDrapeau.innerHTML= "nombre de Drapeau: " + this.nbDrapeau;
             this.divMine.innerHTML= "nombre de mine: " + this.nbDrapeau;
         }
         else if (message === MESSAGE.INIT) {
             this.interval = setInterval(() => this.chrono(message), 1000);
-            console.log(message);
-            this.btnIndice.addEventListener("click", () => {
-                if (this.nbIndice > 0) {
-                    this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_INDICE);
-                    this.nbIndice--;
-                    this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
-                }
-            });
         }
         else {
             result = super.reçoitMessage(message, piecejointe);
@@ -136,8 +127,11 @@ class CtrlScore extends Ctrl {
         if (message === MESSAGE.INIT) {
             this.pres.reçoitMessage(message);
             
-        }
+        } 
         else if (message === MESSAGE.AJOUTDRAPEAU) {
+            this.pres.reçoitMessage(message);
+        }
+        else if (message === MESSAGE.ARRETCLICKDROIT) {
             this.pres.reçoitMessage(message);
         }
         else if (message === MESSAGE.ENLEVEDRAPEAU) {
