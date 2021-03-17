@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="js/progression.js"></script>
+    <title>Mot Fléchés</title>
     <link rel='stylesheet' href="css/styles.css" type='text/css'>
+    <script src="js/connexion.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
@@ -35,45 +36,42 @@
                     <li class="nav-item">
                         <a class="nav-link" href="indexProgression.html">Progression</a>
                     </li>
+                    <span class="navbar-text" id="pseudoNav">
+                    </span>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container text-center text-white">
+
+
+    <div class="container text-white">
         <div class="row">
-            <h2 id="pseudo"></h2>
-        </div>
-        <div class="row">
-            <div class="col">
-                <h3>Général</h3>
-                <div id="general"></div>
+            <div class="col text-center">
+                <h2>Se Connecter</h2>
+                <div>Pseudo</div>
+                <input id="pseudoConnex" type="text">
+                <div>Mot de passe</div>
+                <input id="mdpConnex" type="password">
+                <br>
+                <button id="btnConnex">Connexion</button>
+                <div id="connexion"></div>
             </div>
-            <div class="col">
-                <h3>Démineur</h3>
-                <div id="dem"></div>
-            </div>
-            <div class="col">
-                <h3>Mots fléchés</h3>
-                <div id="mf"></div>
-            </div>
-        </div>
-        <div class="container text-center text-white">
-            <div class="row">
-                <div class="col">
-                    <h3>Succès</h3>
-                    <p>Débloquez le succès "Grand Génie" en teminant 5 parties de Démineur</p>
-                    <p>Débloquez le succès "Grand Maître" en teminant 5 parties de Mots Fléchés</p>
-                    <div id="succes"></div>
-                </div>
+            <div class="col text-center">
+                <h2>S'enregistrer</h2>
+                <div>Pseudo</div>
+                <input id="pseudoRegister" type="text">
+                <div>Mot de passe</div>
+                <input id="mdpRegister" type="password">
+                <br>
+                <button id="btnRegister">S'enregistrer</button>
+                <div id="register"></div>
             </div>
         </div>
     </div>
 
-
+    <footer> Omar Elmotacime-Geoffrey Lalic </footer>
 
 </body>
-
-
 
 </html>

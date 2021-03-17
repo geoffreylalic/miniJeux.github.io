@@ -1,3 +1,14 @@
+//récupération de localStorage
+let chargementJoueur = localStorage.getItem("listeJoueur");
+chargementJoueur = JSON.parse(chargementJoueur);
+let joueurActif;
+chargementJoueur.forEach(joueur => {
+    if (joueur.actif === true) { 
+        joueurActif = joueur;
+    }
+});
+console.log(joueurActif);
+
 class AbsGrille extends Abs {
     constructor(niveau) {
         super();
@@ -33,16 +44,16 @@ class AbsGrille extends Abs {
         let result = "";
         if (message === MESSAGE.LISTE_MOTS) {
             result = this.listeDeMots;
-        } else if(message === MESSAGE.CLICK_INDICE){
+        } else if (message === MESSAGE.CLICK_INDICE) {
             //piecejointe = caseClické sur présentation
             let lettre = this.indice(piecejointe);
-            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.CLICK_INDICE_RENVOI,lettre);
-        } 
+            this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.CLICK_INDICE_RENVOI, lettre);
+        }
         else if (message === MESSAGE.REJOUER_MAJ) {
             this.rejouerGrille();
         } else if (message === MESSAGE.DIFFICULTE) {
             this.ctrl.reçoitMessageDeLAbstraction(message, this.difficulte);
-        }else if (message === MESSAGE.LISTE_INDICES) {
+        } else if (message === MESSAGE.LISTE_INDICES) {
             result = this.listeIndices;
         } else if (message === MESSAGE.LETTRE) {
             this.ajoutLettre(piecejointe);
@@ -60,7 +71,7 @@ class AbsGrille extends Abs {
         return result;
     }
 
-    indice(caseClicke){
+    indice(caseClicke) {
         let ligne = parseInt(caseClicke.dataset.ligne);
         let colonne = parseInt(caseClicke.dataset.colonne);
         this.grilleUser[ligne][colonne] = this.listeDeMots[ligne][colonne];
@@ -99,6 +110,8 @@ class AbsGrille extends Abs {
         }
         if (fin === this.nbLignes) {
             alert("Gagné!!");
+            joueurActif.nbPartieMF +=1;
+            console.log('gagné ' + joueurActif);
             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.GAGNER);
         }
     }
@@ -129,7 +142,6 @@ class AbsGrille extends Abs {
                             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.LETTRE_JUSTE, [ligne, position]);
                         }
                     }
-
                 }
             }
         }
@@ -197,16 +209,16 @@ class PresGrille extends Pres {
         if (message === MESSAGE.INIT) {
             this.dessineGrille();
             this.remplirIndices();
-        }else if (message === MESSAGE.CLICK_INDICE){
+        } else if (message === MESSAGE.CLICK_INDICE) {
             //on vérefie qu'une case a été clické
-            if(this.tabCaseClick.length>0){
+            if (this.tabCaseClick.length > 0) {
                 //on envoie à l'abstraction la case clické
-                this.ctrl.reçoitMessageDeLaPresentation(message,this.tabCaseClick[0]);
+                this.ctrl.reçoitMessageDeLaPresentation(message, this.tabCaseClick[0]);
             }
-        } else if(message === MESSAGE.CLICK_INDICE_RENVOI){
+        } else if (message === MESSAGE.CLICK_INDICE_RENVOI) {
             this.tabCaseClick[0].innerHTML = piecejointe;
         }
-         else if (message === MESSAGE.LETTRE_JUSTE) {
+        else if (message === MESSAGE.LETTRE_JUSTE) {
             this.lettreTrouve(piecejointe);
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.triche(piecejointe);
@@ -346,9 +358,9 @@ class CtrlGrille extends Ctrl {
             this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.CLICK_REJOUER) {
             this.abs.reçoitMessage(message);
-        } else if(message === MESSAGE.CLICK_INDICE){
+        } else if (message === MESSAGE.CLICK_INDICE) {
             this.pres.reçoitMessage(message);
-        } 
+        }
         else {
             result = super.reçoitMessageDunEnfnant(message, piecejointe, ctrl)
         }
@@ -359,15 +371,16 @@ class CtrlGrille extends Ctrl {
         let result = "";
         if (message === MESSAGE.LETTRE_JUSTE) {
             this.pres.reçoitMessage(message, piecejointe);
-        }else if(message === MESSAGE.CLICK_INDICE_RENVOI){
-            this.pres.reçoitMessage(message,piecejointe);
+        } else if (message === MESSAGE.CLICK_INDICE_RENVOI) {
+            this.pres.reçoitMessage(message, piecejointe);
         }
-         else if (message === MESSAGE.DIFFICULTE) {
+        else if (message === MESSAGE.DIFFICULTE) {
             this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message, piecejointe);
             });
         }
         else if (message === MESSAGE.GAGNER) {
+            this.majJoueur();
             this.enfants.forEach(enfant => {
                 enfant.reçoitMessageDuParent(message);
             });
@@ -386,10 +399,10 @@ class CtrlGrille extends Ctrl {
         let result = "";
         if (message === MESSAGE.LISTE_MOTS) {
             result = this.abs.reçoitMessage(message);
-        }else if(message === MESSAGE.CLICK_INDICE){
-            this.abs.reçoitMessage(message,piecejointe);
+        } else if (message === MESSAGE.CLICK_INDICE) {
+            this.abs.reçoitMessage(message, piecejointe);
         }
-         else if (message === MESSAGE.LISTE_INDICES) {
+        else if (message === MESSAGE.LISTE_INDICES) {
             result = this.abs.reçoitMessage(message);
         } else if (message === MESSAGE.LETTRE) {
             this.abs.reçoitMessage(message, piecejointe);
@@ -401,6 +414,12 @@ class CtrlGrille extends Ctrl {
         }
         return result;
     }
+
+    majJoueur(){
+        chargementJoueur = JSON.stringify(chargementJoueur);
+        localStorage.setItem("listeJoueur",chargementJoueur);
+    }
+
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
         this.abs.reçoitMessage(MESSAGE.DIFFICULTE);
