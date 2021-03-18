@@ -89,7 +89,7 @@ class PresScore extends Pres {
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
             this.btnRejouer.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_REJOUER));
             this.btnQuitter.addEventListener("click", () => {
-                window.location.href = "indexPageDacceuil.html";
+                window.location.href = "index.html";
             });
             this.btnChangeNiv.addEventListener("click", () => {
                 window.location.href = "niveauxMotFléchés.html";

@@ -80,9 +80,9 @@ class PresScore extends Pres {
         if (message === MESSAGE.INIT) {
             this.interval = setInterval(() => this.chrono(message), 1000);
             this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
-            this.btnRejouer.addEventListener("click", () => { window.location.href = "indexDemineur.html"; });
+            this.btnRejouer.addEventListener("click", () => { window.location.reload() });
             this.btnQuitter.addEventListener("click", () => {
-                window.location.reload();
+                window.location.href="index.html";
             });
             this.btnChangeNiv.addEventListener("click", () => {
                 window.location.href = "niveauxDémineur.html";
