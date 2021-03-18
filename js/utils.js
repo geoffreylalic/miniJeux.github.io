@@ -14,8 +14,25 @@ function create2DArray(rows, columns) {
     }
     return arr;
 }
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("niveau " + localStorage.getItem("niveau"));
 
-function selectionNiveau(lvl){
-    niveau = lvl;
-}
+    //pour afficher le pseudo actifd dans la navbar
+    let pseudoNav = document.querySelector("#pseudoNav");
+    let chargementJoueur = localStorage.getItem("listeJoueur");
+    chargementJoueur = JSON.parse(chargementJoueur);
+    let joueurActif;
+    let trouve = false;
+    chargementJoueur.forEach(joueur => {
+        if (joueur.actif === true) {
+            trouve = true;
+            joueurActif = joueur;
+            pseudoNav.innerHTML = joueurActif.pseudo;
+        } 
+    });
+    if (trouve === false){
+            pseudoNav.innerHTML = "aucun"
+    }
+
+});
 

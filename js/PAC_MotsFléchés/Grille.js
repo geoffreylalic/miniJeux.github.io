@@ -1,12 +1,18 @@
+console.log("niveau " + localStorage.getItem("niveau"));
 //récupération de localStorage
 let chargementJoueur = localStorage.getItem("listeJoueur");
 chargementJoueur = JSON.parse(chargementJoueur);
 let joueurActif;
+let trouve = false;
 chargementJoueur.forEach(joueur => {
-    if (joueur.actif === true) { 
+    if (joueur.actif === true) {
+        trouve = true;
         joueurActif = joueur;
     }
 });
+if(trouve === false){
+    joueurActif = "personne";
+}
 console.log(joueurActif);
 
 class AbsGrille extends Abs {
@@ -110,8 +116,10 @@ class AbsGrille extends Abs {
         }
         if (fin === this.nbLignes) {
             alert("Gagné!!");
-            joueurActif.nbPartieMF +=1;
-            console.log('gagné ' + joueurActif);
+            if (joueurActif !=='personne') {
+                joueurActif.nbPartieMF += 1;
+                console.log('gagné ' + joueurActif);
+            }
             this.ctrl.reçoitMessageDeLAbstraction(MESSAGE.GAGNER);
         }
     }
@@ -415,9 +423,9 @@ class CtrlGrille extends Ctrl {
         return result;
     }
 
-    majJoueur(){
+    majJoueur() {
         chargementJoueur = JSON.stringify(chargementJoueur);
-        localStorage.setItem("listeJoueur",chargementJoueur);
+        localStorage.setItem("listeJoueur", chargementJoueur);
     }
 
     init() {

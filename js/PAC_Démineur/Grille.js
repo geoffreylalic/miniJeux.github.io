@@ -1,13 +1,18 @@
-console.log("niveau "+localStorage.getItem("niveau"));
+console.log("niveau " + localStorage.getItem("niveau"));
 //récupération de localStorage
 let chargementJoueur = localStorage.getItem("listeJoueur");
 chargementJoueur = JSON.parse(chargementJoueur);
 let joueurActif;
+let trouve = false;
 chargementJoueur.forEach(joueur => {
-    if (joueur.actif === true) { 
+    if (joueur.actif === true) {
+        trouve = true;
         joueurActif = joueur;
     }
 });
+if(trouve === false){
+    joueurActif = "personne";
+}
 console.log(joueurActif);
 
 class AbsGrille extends Abs {
@@ -259,8 +264,10 @@ class PresGrille extends Pres {
         }
         if (this.nbCaseDecouvertes === (this.nbLignes * this.nbColonnes - this.nbMines)) {
             alert("Gagné !!");
-            joueurActif.nbPartieDem +=1;
-            console.log('gagné ' + joueurActif);
+            if (joueurActif !=='personne') {
+                joueurActif.nbPartieDem += 1;
+                console.log('gagné ' + joueurActif);
+            }
             this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.GAGNER);
         }
     }
@@ -350,8 +357,11 @@ class PresGrille extends Pres {
                 }
             });
             alert('Perdu!');
-            joueurActif.nbPartieDem +=1;
-            console.log('perdu ' + joueurActif);
+            console.log(joueurActif);
+            if (joueurActif !=='personne') {
+                joueurActif.nbPartieDem += 1;
+                console.log('perdu ' + joueurActif);
+            }
             this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.PERDU);
         }
         else if (!this.tabCase[ligne][colonne].mine) {
@@ -565,9 +575,9 @@ class CtrlGrille extends Ctrl {
         }
     }
 
-    majJoueur(){
+    majJoueur() {
         chargementJoueur = JSON.stringify(chargementJoueur);
-        localStorage.setItem("listeJoueur",chargementJoueur);
+        localStorage.setItem("listeJoueur", chargementJoueur);
     }
 
     init() {

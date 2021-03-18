@@ -53,9 +53,6 @@
     text-align: center;
 }
 
-#grilleMF div:hover {
-    /*background-color: pink;*/
-}
 
 .haut {
     position: inherit;
@@ -211,6 +208,20 @@ footer {
     text-align: center;
 }
 
+.nomJeu{
+    color: red;
+    font-weight:bold;
+}
+
 #score{
     padding-left: 30px;
+}
+.niveaux{
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+#pseudo{
+    color:red;
+    font-weight: bold;
+    padding: 20px;;
 }

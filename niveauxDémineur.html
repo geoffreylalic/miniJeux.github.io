@@ -26,10 +26,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="indexMotFléchés.html">Mot Fléchés</a>
+                        <a class="nav-link" href="niveauxMotFléchés.html">Mot Fléchés</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="indexDemineur.html">Démineur</a>
+                        <a class="nav-link" href="niveauxDémineur.html">Démineur</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="indexRegles.html">Règles</a>
@@ -37,33 +37,40 @@
                     <li class="nav-item">
                         <a class="nav-link" href="indexProgression.html">Progression</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="connexion.html">Connexion</a>
+                    </li>
+                    <span class="navbar-text" id="pseudoNav">
+                    </span>
                 </ul>
             </div>
         </div>
     </nav>
-    <h1>Selectionnez un niveaux du Démineur</h1>
-
-    <div class="container-fluid">
-
-        <a href="indexDemineur.html">
-            <div class="row h1 text-white niveaux" id="facile" onclick="localStorage.setItem('niveau',3);">
-                Facile
-            </div>
-        </a>
-        <a href="indexDemineur.html">
-            <div class="row h1 text-white niveaux" id="moyen" onclick="localStorage.setItem('niveau',4);">
-                    Moyen
-            </div>
-        </a>
-        <a href="indexDemineur.html">
-            <div class="row h1 text-white niveaux" id="difficile" onclick="localStorage.setItem('niveau',5);">
-                    Dificile
-            </div>
-        </a>
-    </div>
+    <h1>Sélectionnez un niveau du <span class ="nomJeu">Démineur</span></h1>
 
     <div class="container">
-        <div class="row"></div>
+        <div class="row">
+            <div class="col">
+                <a href="indexDemineur.html">
+                    <div class="row h1 text-white niveaux" onclick="localStorage.setItem('niveau',3);">
+                        Facile
+                    </div>
+                </a>
+                <a href="indexDemineur.html">
+                    <div class="row h1 text-white niveaux" onclick="localStorage.setItem('niveau',4);">
+                        Moyen
+                    </div>
+                </a>
+                <a href="indexDemineur.html">
+                    <div class="row h1 text-white niveaux" onclick="localStorage.setItem('niveau',5);">
+                        Dificile
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="container">
+        </div>
     </div>
     <footer> Omar Elmotacime-Geoffrey Lalic </footer>
 

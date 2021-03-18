@@ -25,8 +25,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 trouve = true;
                 listeJoueur[joueur].actif = true;
                 resConnex.innerHTML = "vous etes connecté";
-                let pseudoNav = document.getElementById("pseudoNav");
-                pseudoNav.innerHTML = listeJoueur[joueur].pseudo;
                 break;
             }
         }
@@ -36,17 +34,22 @@ window.addEventListener("DOMContentLoaded", () => {
         //on renvoie les changements
         listeJoueur = JSON.stringify(listeJoueur);
         localStorage.setItem("listeJoueur",listeJoueur);
+        document.location.reload();
 
     });
 
+
     let deconnexion = document.querySelector("#btnDeconnex");
-    
     deconnexion.addEventListener("click",()=>{
         let listeJoueur = localStorage.getItem("listeJoueur");
         listeJoueur = JSON.parse(listeJoueur);
         listeJoueur.forEach(joueur =>{
             joueur.actif = false;
         });
+        console.log("deco "+ listeJoueur)
+        listeJoueur = JSON.stringify(listeJoueur);
+        localStorage.setItem("listeJoueur",listeJoueur);
+        document.location.reload();
     });
 
     let register = document.querySelector("#btnRegister");
