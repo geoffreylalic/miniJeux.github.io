@@ -1,9 +1,4 @@
-/** En JavaScript on ne peut pas déclarer directement de tableau à n dimensions
-   en précisant toutes les dimensions. tab [4][4] n'est pas possible par exemple.
-   On déclare en général un tableau à une dimension de taille varialbe (ci-dessous 
-   let arr = []) puis ensuite pour chacune des lignes du tableau, on lui affecte un autre
-   tableau (arr[i] = [] ci-dessous) */
-
+//fonction issue des tps de M. Buffa
 function create2DArray(rows, columns) {
     let arr = [];
 
@@ -14,6 +9,7 @@ function create2DArray(rows, columns) {
     }
     return arr;
 }
+//récupération du profil connecté
 window.addEventListener("DOMContentLoaded", () => {
     console.log("niveau " + localStorage.getItem("niveau"));
 

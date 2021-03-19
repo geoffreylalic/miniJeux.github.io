@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     //récup des infos sur html
     let connexion = document.querySelector("#btnConnex");
+    //permet de connecter un profil
     connexion.addEventListener("click", () => {
         let pseudoConnex = document.querySelector("#pseudoConnex").value;
         let mdpConnex = document.querySelector("#mdpConnex").value;
@@ -37,7 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     });
 
-
+    //permet de déconnecter un profil actif
     let deconnexion = document.querySelector("#btnDeconnex");
     deconnexion.addEventListener("click",()=>{
         let listeJoueur = localStorage.getItem("listeJoueur");
@@ -51,6 +52,7 @@ window.addEventListener("DOMContentLoaded", () => {
         document.location.reload();
     });
 
+    //permet d'ajouter un profil
     let register = document.querySelector("#btnRegister");
     register.addEventListener("click", () => {
         let pseudoRegister = document.querySelector("#pseudoRegister").value;

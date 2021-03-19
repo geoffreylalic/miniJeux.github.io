@@ -19,12 +19,11 @@ class AbsScore extends Abs {
 class PresScore extends Pres {
     constructor() {
         super();
-        this.nbPoints = 0;
-        this.nbClick = 0;
-
+        // récupération de la balise #socre pour implémenté la suite du bloque de score
         this.blockScore = document.querySelector("#score");
         this.blockScore.classList.add("text-white");
 
+        //on crée les différentes informations et boutons dans le constructeur
         this.titre = document.createElement("h2");
         this.titre.innerHTML = "Score";
         this.blockScore.appendChild(this.titre);
@@ -111,6 +110,9 @@ class PresScore extends Pres {
         return result;
     }
 
+    /**
+     * permet de réinitialiser le temps et le nombre d'indice
+     */
     rejouerScore() {
         //pour le chrono
         this.startTemps = 1800;
@@ -121,7 +123,10 @@ class PresScore extends Pres {
         this.nbIndice = 5;
         this.btnIndice.innerHTML = "Indices restants " + this.nbIndice;
     }
-
+    /**
+     * permet d'iniatiliser le chronometre
+     * @param {*} message il sera utiliser pour afficher la fin de temps
+     */
     chrono(message) {
         let minutes = Math.floor(this.startTemps / 60);
         let secondes = this.startTemps % 60;
@@ -143,7 +148,10 @@ class PresScore extends Pres {
         }
 
     }
-
+    /**
+     * permet d'arréter le temps en fonction du message reçu
+     * @param {*} message représente le message recu par le chrono
+     */
     finTemps(message) {
         clearInterval(this.interval);
         let affichageTemps = document.getElementById("temps");

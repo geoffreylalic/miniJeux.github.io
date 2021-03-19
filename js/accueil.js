@@ -1,4 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
+    //on récupére la liste de joueur stocké dans la variable listeJoueur de localStorage
     let chargementJoueur = localStorage.getItem("listeJoueur");
     if (chargementJoueur === null) {
         let listeJoueur = [];

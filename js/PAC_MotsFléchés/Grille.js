@@ -1,3 +1,4 @@
+//Récupération des données de l'utilisateur en ligne
 console.log("niveau " + localStorage.getItem("niveau"));
 //récupération de localStorage
 let chargementJoueur = localStorage.getItem("listeJoueur");
@@ -18,6 +19,7 @@ console.log(joueurActif);
 class AbsGrille extends Abs {
     constructor(niveau) {
         super();
+        //récupère le niveau sélectionner
         this.niveau = niveau;
 
         //la difficulté
@@ -40,12 +42,20 @@ class AbsGrille extends Abs {
             }
         }
 
-
+        //liste des indices
         this.listeIndices = JEUX[this.niveau].listeIndices;
+        //liste des solutions lignes
         this.solutionLigne = JEUX[this.niveau].solutionLigne;
+        //liste des solutions colonnes
         this.solutionColonne = JEUX[this.niveau].solutionColonne;
-
     }
+
+    /**
+     * permet de traiter les messages arrivant à l'abstraction
+     * @param {*} message 
+     * @param {*} piecejointe 
+     * @returns 
+     */
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.LISTE_MOTS) {
@@ -77,6 +87,11 @@ class AbsGrille extends Abs {
         return result;
     }
 
+    /**
+     * permet d'afficher la lettre correspondant à la case
+     * @param {*} caseClicke 
+     * @returns 
+     */
     indice(caseClicke) {
         let ligne = parseInt(caseClicke.dataset.ligne);
         let colonne = parseInt(caseClicke.dataset.colonne);
@@ -84,6 +99,9 @@ class AbsGrille extends Abs {
         return this.grilleUser[ligne][colonne];
     }
 
+    /**
+     * permet de réinitialiser la grille de l'utilisateur
+     */
     rejouerGrille() {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
@@ -97,11 +115,16 @@ class AbsGrille extends Abs {
         this.solutionColonne = JEUX[this.niveau].solutionColonne;
     }
 
-
+    /**
+     * envoie un message d'alerte
+     */
     finTriche() {
         alert("Fin de partie, vous avez triché");
     }
 
+    /**
+     * permet de vérifier si une partie est terminer
+     */
     finDePartie() {
         let fin = 0;
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
@@ -124,6 +147,10 @@ class AbsGrille extends Abs {
         }
     }
 
+    /**
+     * ajoute une lettre dans la grille de l'uilisateur
+     * @param {} piecejointe correspond à la ligne colonne et la lettre entrée dans une liste
+     */
     ajoutLettre(piecejointe) {
         //on place la lettre ajouter dans this.grilleUSer
         let ligne = piecejointe[0];
@@ -132,6 +159,9 @@ class AbsGrille extends Abs {
         this.grilleUser[ligne][colonne] = lettre;
     }
 
+    /**
+     * permet de vérifier les ligne de la grille de l'utilisateur
+     */
     verificationLigne() {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let indice = 0; indice < this.solutionLigne.length; indice++) {
@@ -155,6 +185,9 @@ class AbsGrille extends Abs {
         }
     }
 
+    /**
+     * permet de vérifier les colonnes de la grille de l'utilisateur
+     */
     verificationColonne() {
         //on tourne le tableau (colonnes deviennent des ligne et vice-versa)
         let grilleInverse = create2DArray(11, 9);
@@ -212,6 +245,12 @@ class PresGrille extends Pres {
 
     }
 
+    /**
+     * permet de traiter les messages arrivant à l'abstraction
+     * @param {*} message 
+     * @param {*} piecejointe 
+     * @returns 
+     */
     reçoitMessage(message, piecejointe) {
         let result;
         if (message === MESSAGE.INIT) {
@@ -239,7 +278,10 @@ class PresGrille extends Pres {
         return result;
     }
 
-
+    /**
+     * permet de réinitialiser la grille présenté
+     * @param {*} listeSolution représente la grille de solution et permet de récupérer l'emplacement des indices
+     */
     rejouer(listeSolution) {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
@@ -255,6 +297,10 @@ class PresGrille extends Pres {
         this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.REJOUER_MAJ);
     }
 
+    /**
+     * permet d'afficher toutes les lettres aux bons emplacements
+     * @param {*} listeSolution représente la grille de solution et permet de récupérer l'emplacement des indices et des lettre
+     */
     triche(listeSolution) {
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
             for (let colonne = 0; colonne < this.nbColonnes; colonne++) {
@@ -268,6 +314,10 @@ class PresGrille extends Pres {
         }
     }
 
+    /**
+     * permet de marqué une lettre si elle a été trouvé par l'utilisateur
+     * @param {*} piecejointe représente la ligne et la colonne de la case trouvé
+     */
     lettreTrouve(piecejointe) {
         let ligne = piecejointe[0];
         let colonne = piecejointe[1];
@@ -277,6 +327,9 @@ class PresGrille extends Pres {
         this.tabCaseClick.pop();
     }
 
+    /**
+     * permet d'ajouter des grille et la forme de la grille se fait grace au css
+     */
     dessineGrille() {
         this.tabCase = create2DArray(this.nbLignes, this.nbColonnes);
         for (let ligne = 0; ligne < this.nbLignes; ligne++) {
@@ -290,6 +343,9 @@ class PresGrille extends Pres {
         }
     }
 
+    /**
+     * permet de remplir les indices de la grilles avec la liste d'indice, '|' et '%' permette de savoir s'il y a 1 ou 2 indice par case
+     */
     remplirIndices() {
         let indexIndice = 0;
         let listeMotsAbs = this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.LISTE_MOTS);
@@ -315,6 +371,7 @@ class PresGrille extends Pres {
                     this.tabCase[ligne][colonne].classList.add("divIndice");
                     indexIndice += 1;
                 } else {
+                    // sur les autres cases on ajoute des listenner 
                     this.tabCase[ligne][colonne].classList.add("caseARemplir");
                     this.tabCase[ligne][colonne].addEventListener("click", () => {
                         if (this.tabCaseClick.length > 0) {
@@ -334,11 +391,8 @@ class PresGrille extends Pres {
         //listener sur clavier
         window.addEventListener("keypress", (evt) => {
             let lettreTape = evt.key.toUpperCase();
+            //remplit la case si elle est selectionné
             if (this.tabCaseClick.length > 0) {
-                /* todo: implémenter le backspace
-                if(evt.key == "Backspace"){
-                    console.log("backspace tapé");
-                }*/
                 this.tabCaseClick[0].innerText = lettreTape;
                 let ligne = parseInt(this.tabCaseClick[0].dataset.ligne);
                 let colonne = parseInt(this.tabCaseClick[0].dataset.colonne);
@@ -357,6 +411,8 @@ class CtrlGrille extends Ctrl {
     constructor(abs, pres) {
         super(abs, pres);
     }
+
+    // toutes les méthodes permette de réceptionner les message envoyé par les autres agent PAC
 
     reçoitMessageDUnEnfant(message, piecejointe, ctrl) {
         let result = "";
@@ -423,11 +479,17 @@ class CtrlGrille extends Ctrl {
         return result;
     }
 
+    /**
+     * permet de mettre a jour la liste de joueur
+     */
     majJoueur() {
         chargementJoueur = JSON.stringify(chargementJoueur);
         localStorage.setItem("listeJoueur", chargementJoueur);
     }
 
+    /**
+     * envoie des message sur chaque agent afin de lancer l'initialisation
+     */
     init() {
         this.pres.reçoitMessage(MESSAGE.INIT);
         this.abs.reçoitMessage(MESSAGE.DIFFICULTE);

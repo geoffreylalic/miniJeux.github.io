@@ -1,3 +1,4 @@
+//liste des niveaux
 const JEUX = [
     //niveau facile
     {

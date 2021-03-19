@@ -1,3 +1,4 @@
+//initialisation du modèle PAC
 window.addEventListener("DOMContentLoaded", () => {
     //selection de niveau
     let niveau = localStorage.getItem('niveau');
