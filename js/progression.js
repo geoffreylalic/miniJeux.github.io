@@ -4,6 +4,8 @@ window.addEventListener("DOMContentLoaded", () => {
     let affDem = document.getElementById("dem");
     let affMf = document.getElementById("mf");
     let affSucces = document.getElementById("succes");
+
+    
     let listeJoueur = localStorage.getItem("listeJoueur");
     listeJoueur = JSON.parse(listeJoueur);
     console.log(listeJoueur);

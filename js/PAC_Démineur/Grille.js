@@ -10,7 +10,7 @@ chargementJoueur.forEach(joueur => {
         joueurActif = joueur;
     }
 });
-if(trouve === false){
+if (trouve === false) {
     joueurActif = "personne";
 }
 console.log(joueurActif);
@@ -219,13 +219,9 @@ class PresGrille extends Pres {
             });
             this.grille.addEventListener("contextmenu", (evt) => {
                 if (evt.target.tagName === 'IMG') {
-
                     let clickDroit = evt.target;
                     this.ajoutDrapeau(clickDroit);
-
-
-                }
-                if (this.nbDrapeau > 0) {
+                } if (this.nbDrapeau > 0) {
                     evt.preventDefault();
                     let clickDroit = evt.target;
                     this.ajoutDrapeau(clickDroit);
@@ -235,8 +231,7 @@ class PresGrille extends Pres {
             });
         } else if (message === MESSAGE.CLICK_TRICHE) {
             this.afficherMine();
-        }
-        else {
+        } else {
             //message d'erreur
             result = super.reçoitMessage(message, piecejointe);
         }
@@ -264,7 +259,7 @@ class PresGrille extends Pres {
         }
         if (this.nbCaseDecouvertes === (this.nbLignes * this.nbColonnes - this.nbMines)) {
             alert("Gagné !!");
-            if (joueurActif !=='personne') {
+            if (joueurActif !== 'personne') {
                 joueurActif.nbPartieDem += 1;
                 console.log('gagné ' + joueurActif);
             }
@@ -358,7 +353,7 @@ class PresGrille extends Pres {
             });
             alert('Perdu!');
             console.log(joueurActif);
-            if (joueurActif !=='personne') {
+            if (joueurActif !== 'personne') {
                 joueurActif.nbPartieDem += 1;
                 console.log('perdu ' + joueurActif);
             }

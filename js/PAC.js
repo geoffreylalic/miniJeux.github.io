@@ -36,7 +36,7 @@ class MESSAGE {
 class Abs {
     setCtrl(ctrl) {
         this.ctrl = ctrl;
-    }
+    }D
 
     reçoitMessage(message, piecejointe) {
         console.error("reçoitMessage de Abs pas encore implémentée : "+message);

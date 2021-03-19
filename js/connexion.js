@@ -7,7 +7,6 @@ window.addEventListener("DOMContentLoaded", () => {
         this.actif = false;
         this.nbPartieMF = 0;
         this.nbPartieDem = 0;
-        this.nbPartieGeneral = 0;
     }
 
     //récup des infos sur html
