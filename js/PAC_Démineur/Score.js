@@ -19,6 +19,9 @@ class AbsScore extends Abs {
 class PresScore extends Pres {
     constructor() {
         super();
+        /**
+         * recuperation des boutons et des informations pour le score
+         */
         this.blockScore = document.querySelector("#score");
         this.blockScore.classList.add("text-white");
 
@@ -40,24 +43,24 @@ class PresScore extends Pres {
 
         this.divDrapeau = document.createElement("div");
         this.divDrapeau.innerHTML = "nombre de drapeau: ";
-        this.blockScore.append(this.divDrapeau);
+        this.blockScore.append(this.divDrapeau);//création du score nombres de drapeaux
 
         this.divMine = document.createElement("div");
         this.divMine.innerHTML = "nombre de mine: ";
-        this.blockScore.append(this.divMine);
+        this.blockScore.append(this.divMine);//création du score nombres de mines
 
 
         this.btnTriche = document.createElement("button");
         this.btnTriche.id = "btnTriche";
         this.btnTriche.innerHTML = "Triche";
         this.btnTriche.classList.add("row");
-        this.blockScore.append(this.btnTriche);
+        this.blockScore.append(this.btnTriche);//creation du bouton tricher qui va révélé les mines
 
         this.btnRejouer = document.createElement("button");
         this.btnRejouer.innerHTML = "Rejouer";
         this.btnRejouer.id = "btnRejouer";
         this.btnRejouer.classList.add("row");
-        this.blockScore.append(this.btnRejouer);
+        this.blockScore.append(this.btnRejouer);//création du bouton pour rejouer 
 
         this.btnChangeNiv = document.createElement("button");
         this.btnChangeNiv.innerHTML = "Changer de niveau";
@@ -67,7 +70,7 @@ class PresScore extends Pres {
         this.btnQuitter = document.createElement("button");
         this.btnQuitter.innerHTML = "Quitter";
         this.btnQuitter.classList.add("row");
-        this.blockScore.append(this.btnQuitter);
+        this.blockScore.append(this.btnQuitter);//création du bouton quitter pour quitter la page
     }
 
     /**
@@ -78,12 +81,12 @@ class PresScore extends Pres {
     reçoitMessage(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.INIT) {
-            this.interval = setInterval(() => this.chrono(message), 1000);
-            this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));
-            this.btnRejouer.addEventListener("click", () => { window.location.reload() });
+            this.interval = setInterval(() => this.chrono(message), 1000);//intervalle du chrono qui se met a jour toute les secondes
+            this.btnTriche.addEventListener("click", () => this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.CLICK_TRICHE));//message recu de la présentation pour arreter le chrono
+            this.btnRejouer.addEventListener("click", () => { window.location.reload() });//permet de raffraichir la page
             this.btnQuitter.addEventListener("click", () => {
                 window.location.href="index.html";
-            });
+            });//permet de quitter la page du jeu et de retourné à la page d'accueil
             this.btnChangeNiv.addEventListener("click", () => {
                 window.location.href = "niveauxDémineur.html";
             });
@@ -106,12 +109,19 @@ class PresScore extends Pres {
         }
         return result;
     }
+    /**
+     * permet d'actualiser le chrono  
+     */
     rejouerScore() {
-        //pour le chrono
+
         this.startTemps = 1800;
         clearInterval(this.interval);
         this.interval = setInterval(() => this.chrono(MESSAGE.INIT), 1000);
     }
+    /**
+     * logique du chrono
+     * @param {*} message 
+     */
     chrono(message) {
         let minutes = Math.floor(this.startTemps / 60);
         let secondes = this.startTemps % 60;
@@ -133,6 +143,10 @@ class PresScore extends Pres {
         }
 
     }
+    /**
+     * permet d'arreter le chrono
+     * @param {*} message 
+     */
 
     finTemps(message) {
         clearInterval(this.interval);
@@ -156,7 +170,12 @@ class PresScore extends Pres {
 class CtrlScore extends Ctrl {
     constructor(abs, pres) {
         super(abs, pres);
-    }
+    }/**
+     * fait le lien entre Grille et Score 
+     * @param {*} message 
+     * @param {*} piecejointe 
+     * @returns 
+     */
     reçoitMessageDuParent(message, piecejointe) {
         let result = "";
         if (message === MESSAGE.INIT) {
@@ -183,6 +202,12 @@ class CtrlScore extends Ctrl {
         return result;
 
     }
+    /**
+     * fait le lien entre la présentation et controle
+     * @param {*} message 
+     * @param {*} piecejointe 
+     * @returns 
+     */
 
     reçoitMessageDeLaPresentation(message, piecejointe) {
         let result = "";
@@ -202,6 +227,11 @@ class CtrlScore extends Ctrl {
 
         return result;
     }
+    /**
+     * fait le lien entre abstraction et control 
+     * @param {*} message 
+     * @param {*} piecejointe 
+     */
 
     reçoitMessageDeLAbstraction(message, piecejointe) {
         let result = "";

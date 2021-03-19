@@ -181,6 +181,10 @@ class AbsGrille extends Abs {
 }
 
 class PresGrille extends Pres {
+    /**
+     * constructeur de la presentation
+     * @param {*} niveau 
+     */
     constructor(niveau) {
         super();
 
@@ -236,7 +240,9 @@ class PresGrille extends Pres {
             result = super.reçoitMessage(message, piecejointe);
         }
         return result;
-    }
+    }/**
+     * affiche les mines trouvé 
+     */
 
     afficherMine() {
         let toutesLesDivs = document.querySelectorAll("#grille div");
@@ -247,6 +253,9 @@ class PresGrille extends Pres {
             }
         });
     }
+    /**
+     * termine la partie du démineur si toute les cases son decouvert
+     */
 
     finDePartie() {
         this.nbCaseDecouvertes = 0;
@@ -266,6 +275,10 @@ class PresGrille extends Pres {
             this.ctrl.reçoitMessageDeLaPresentation(MESSAGE.GAGNER);
         }
     }
+    /**
+     * permet d'ajouter un drapeau
+     * @param {*} clickDroit 
+     */
 
     ajoutDrapeau(clickDroit) {
         if (clickDroit.tagName === 'DIV') {
